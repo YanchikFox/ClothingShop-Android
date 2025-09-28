@@ -1,6 +1,6 @@
 # ClothingShop Android App
 
-This document describes how to set up and run the companion Android application that consumes the [ClothingShop API]([./README.md](https://github.com/YanchikFox/ClothingShop-API/blob/master/README.md)). The source lives in a separate repository: [`YanchikFox/ClothingShop-Android`](https://github.com/YanchikFox/ClothingShop-Android).
+This document describes how to set up and run the companion Android application that consumes the [ClothingShop API](https://github.com/YanchikFox/ClothingShop-API). The source lives in a separate repository: [`YanchikFox/ClothingShop-Android`](https://github.com/YanchikFox/ClothingShop-Android).
 
 ## Overview
 
