@@ -1,4 +1,5 @@
-# ClothingShop Android App
+# ClothingShop Android App  ![Android Build](https://github.com/YanchikFox/ClothingShop-Android/actions/workflows/android-build.yml/badge.svg)
+
 
 This document describes how to set up and run the companion Android application that consumes the [ClothingShop API](https://github.com/YanchikFox/ClothingShop-API). The source lives in a separate repository: [`YanchikFox/ClothingShop-Android`](https://github.com/YanchikFox/ClothingShop-Android).
 
