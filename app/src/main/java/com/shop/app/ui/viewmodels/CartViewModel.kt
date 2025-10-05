@@ -20,8 +20,7 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
 
     val totalPrice: StateFlow<Double> = _cartItems.map { list ->
         list.sumOf { cartItem ->
-            val price = cartItem.product.priceString.replace(Regex("[^\\d]"), "").toDoubleOrNull() ?: 0.0
-            price * cartItem.quantity
+            cartItem.product.price * cartItem.quantity
         }
     }.stateIn(
         scope = viewModelScope,

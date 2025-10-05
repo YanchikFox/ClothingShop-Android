@@ -7,6 +7,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,8 +17,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.shop.app.BuildConfig
 import com.shop.app.data.model.Product
-import com.shop.app.di.ServiceLocator
+import java.text.NumberFormat
+import java.util.Locale
 
 @Composable
 fun ProductCard(
@@ -25,13 +28,19 @@ fun ProductCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
+    val currencyFormat = remember {
+        NumberFormat.getCurrencyInstance(Locale("uk", "UA")).apply {
+            maximumFractionDigits = 0
+        }
+    }
+
     Card(modifier = modifier.clickable(onClick = onClick)) {
         Column {
             // Box for displaying image and "Hit" badge
             Box {
                 AsyncImage(
                     // Build full URL for image
-                    model = ServiceLocator.imagesBaseUrl + product.imagePath,
+                    model = BuildConfig.IMAGES_BASE_URL + product.imagePath,
                     contentDescription = product.name,
                     modifier = Modifier.fillMaxWidth().aspectRatio(0.8f),
                     contentScale = ContentScale.Crop
@@ -56,7 +65,7 @@ fun ProductCard(
                 modifier = Modifier.padding(12.dp).defaultMinSize(minHeight = 80.dp)
             ) {
                 Text(
-                    text = product.priceString,
+                    text = currencyFormat.format(product.price),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -76,7 +85,17 @@ fun ProductCard(
 @Preview
 @Composable
 fun ProductCardPreview() {
-    val sampleProduct = Product("su001", "1023", "unisex", "Sample Product", "Description", "images/1.jpg", "1 200 ₴", true)
+    val sampleProduct = Product(
+        id = "su001",
+        article = "1023",
+        gender = "unisex",
+        name = "Sample Product",
+        description = "Description",
+        imagePath = "images/1.jpg",
+        price = 1200.0,
+        priceString = "1 200 ₴",
+        isBestseller = true
+    )
     ProductCard(
         product = sampleProduct,
         modifier = Modifier.width(200.dp),

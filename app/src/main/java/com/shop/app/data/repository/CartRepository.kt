@@ -21,6 +21,7 @@ class CartRepository {
                 name = responseItem.name,
                 description = responseItem.description,
                 imagePath = responseItem.imagePath,
+                price = responseItem.price,
                 priceString = responseItem.priceString,
                 isBestseller = responseItem.isBestseller
             )

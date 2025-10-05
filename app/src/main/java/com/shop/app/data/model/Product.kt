@@ -12,6 +12,9 @@ data class Product(
     @SerializedName("image_path")
     val imagePath: String,
 
+    @SerializedName("price")
+    val price: Double,
+
     @SerializedName("price_string")
     val priceString: String,
 

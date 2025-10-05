@@ -18,6 +18,8 @@ import coil.compose.AsyncImage
 import com.shop.app.data.model.Product
 import com.shop.app.di.ServiceLocator
 import com.shop.app.ui.theme.TShopAppTheme
+import java.text.NumberFormat
+import java.util.Locale
 
 @Composable
 fun ProductDetailScreen(
@@ -34,6 +36,12 @@ fun ProductDetailScreen(
             Text(text = "Product not found")
         }
     } else {
+        val currencyFormat = remember {
+            NumberFormat.getCurrencyInstance(Locale("uk", "UA")).apply {
+                maximumFractionDigits = 0
+            }
+        }
+
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -57,7 +65,7 @@ fun ProductDetailScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = product.priceString,
+                    text = currencyFormat.format(product.price),
                     style = MaterialTheme.typography.titleLarge
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -110,6 +118,7 @@ fun ProductDetailScreenPreview() {
         name = "Sample Product",
         description = "Complete product description for preview...",
         imagePath = "images/1.jpg",
+        price = 1200.0,
         priceString = "1 200 ₴",
         isBestseller = true
     )

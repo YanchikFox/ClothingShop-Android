@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -18,6 +19,8 @@ import com.shop.app.data.model.CartItem
 import com.shop.app.data.model.Product
 import com.shop.app.di.ServiceLocator
 import com.shop.app.ui.theme.TShopAppTheme
+import java.text.NumberFormat
+import java.util.Locale
 
 @Composable
 fun CartItemRow(
@@ -33,6 +36,12 @@ fun CartItemRow(
             .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        val currencyFormat = remember {
+            NumberFormat.getCurrencyInstance(Locale("uk", "UA")).apply {
+                maximumFractionDigits = 0
+            }
+        }
+
         AsyncImage(
             // Use imagePath and build full URL
             model = ServiceLocator.imagesBaseUrl + cartItem.product.imagePath,
@@ -49,9 +58,8 @@ fun CartItemRow(
                 text = cartItem.product.name,
                 style = MaterialTheme.typography.titleMedium
             )
-            // Use the ready priceString field
             Text(
-                text = cartItem.product.priceString,
+                text = currencyFormat.format(cartItem.product.price),
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -77,6 +85,7 @@ fun CartItemRowPreview() {
         article = "1023",
         imagePath = "images/1.jpg",
         name = "Your Product 1",
+        price = 1200.0,
         priceString = "1 200 ₴",
         description = "Description...",
         isBestseller = true,

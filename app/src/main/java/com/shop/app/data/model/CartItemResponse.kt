@@ -12,6 +12,8 @@ data class CartItemResponse(
     val description: String,
     @SerializedName("image_path")
     val imagePath: String,
+    @SerializedName("price")
+    val price: Double,
     @SerializedName("price_string")
     val priceString: String,
     @SerializedName("is_bestseller")

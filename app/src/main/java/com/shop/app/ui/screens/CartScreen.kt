@@ -9,6 +9,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -36,8 +37,10 @@ fun CartScreen(
         }
     } else {
         // Configure Ukrainian locale for currency formatting
-        val currencyFormat = NumberFormat.getCurrencyInstance(Locale("uk", "UA")).apply {
-            maximumFractionDigits = 0
+        val currencyFormat = remember {
+            NumberFormat.getCurrencyInstance(Locale("uk", "UA")).apply {
+                maximumFractionDigits = 0
+            }
         }
 
         Column(modifier = modifier.fillMaxSize()) {
@@ -75,7 +78,17 @@ fun CartScreen(
 @Preview(showBackground = true)
 @Composable
 fun CartScreenPreview() {
-    val sampleProduct = Product("su001", "1023", "unisex", "Sample Product", "Description", "images/1.jpg", "1 200 ₴", true)
+    val sampleProduct = Product(
+        id = "su001",
+        article = "1023",
+        gender = "unisex",
+        name = "Sample Product",
+        description = "Description",
+        imagePath = "images/1.jpg",
+        price = 1200.0,
+        priceString = "1 200 ₴",
+        isBestseller = true
+    )
     val sampleCartItems = listOf(CartItem(product = sampleProduct, quantity = 2))
     TShopAppTheme {
         CartScreen(
