@@ -34,6 +34,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Surface
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
+import com.shop.app.R
 
 @Composable
 fun CatalogScreen(
@@ -93,7 +95,7 @@ fun CatalogScreen(
         }
         is CatalogUiState.Error -> {
             Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Failed to load categories")
+                Text(stringResource(R.string.catalog_error_loading))
             }
         }
     }

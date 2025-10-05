@@ -1,5 +1,6 @@
 package com.shop.app.ui.screens
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,43 +43,50 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.res.stringResource
 import com.shop.app.ui.components.ProductCard
 import com.shop.app.ui.viewmodels.ProductsUiState
 import com.shop.app.ui.viewmodels.SearchFilters
 import com.shop.app.ui.viewmodels.SearchSortOption
 import com.shop.app.ui.viewmodels.SearchViewModel
+import com.shop.app.R
 
-private data class CategoryFilterOption(val id: String?, val label: String)
-private data class PriceFilterOption(val id: String, val label: String, val min: Double?, val max: Double?)
-private data class SizeFilterOption(val id: String?, val label: String)
+private data class CategoryFilterOption(val id: String?, @StringRes val labelRes: Int)
+private data class PriceFilterOption(
+    val id: String,
+    @StringRes val labelRes: Int,
+    val min: Double?,
+    val max: Double?
+)
+private data class SizeFilterOption(val id: String?, @StringRes val labelRes: Int)
 
 private val categoryFilterOptions = listOf(
-    CategoryFilterOption(null, "Все"),
-    CategoryFilterOption("female", "Женщины"),
-    CategoryFilterOption("male", "Мужчины"),
-    CategoryFilterOption("unisex", "Унисекс"),
+    CategoryFilterOption(null, R.string.search_filter_category_all),
+    CategoryFilterOption("female", R.string.search_filter_category_women),
+    CategoryFilterOption("male", R.string.search_filter_category_men),
+    CategoryFilterOption("unisex", R.string.search_filter_category_unisex),
 )
 
 private val priceFilterOptions = listOf(
-    PriceFilterOption("all", "Любая", null, null),
-    PriceFilterOption("lt1500", "До 1500 ₴", null, 1500.0),
-    PriceFilterOption("1500_2500", "1500–2500 ₴", 1500.0, 2500.0),
-    PriceFilterOption("gt2500", "От 2500 ₴", 2500.0, null),
+    PriceFilterOption("all", R.string.search_filter_price_all, null, null),
+    PriceFilterOption("lt1500", R.string.search_filter_price_under_1500, null, 1500.0),
+    PriceFilterOption("1500_2500", R.string.search_filter_price_1500_2500, 1500.0, 2500.0),
+    PriceFilterOption("gt2500", R.string.search_filter_price_over_2500, 2500.0, null),
 )
 
 private val sizeFilterOptions = listOf(
-    SizeFilterOption(null, "Все"),
-    SizeFilterOption("XS", "XS"),
-    SizeFilterOption("S", "S"),
-    SizeFilterOption("M", "M"),
-    SizeFilterOption("L", "L"),
-    SizeFilterOption("XL", "XL"),
-    SizeFilterOption("38", "38"),
-    SizeFilterOption("39", "39"),
-    SizeFilterOption("40", "40"),
-    SizeFilterOption("41", "41"),
-    SizeFilterOption("42", "42"),
-    SizeFilterOption("43", "43"),
+    SizeFilterOption(null, R.string.search_filter_size_all),
+    SizeFilterOption("XS", R.string.size_xs),
+    SizeFilterOption("S", R.string.size_s),
+    SizeFilterOption("M", R.string.size_m),
+    SizeFilterOption("L", R.string.size_l),
+    SizeFilterOption("XL", R.string.size_xl),
+    SizeFilterOption("38", R.string.size_38),
+    SizeFilterOption("39", R.string.size_39),
+    SizeFilterOption("40", R.string.size_40),
+    SizeFilterOption("41", R.string.size_41),
+    SizeFilterOption("42", R.string.size_42),
+    SizeFilterOption("43", R.string.size_43),
 )
 
 @Composable
@@ -99,12 +107,20 @@ fun SearchScreen(
         OutlinedTextField(
             value = query,
             onValueChange = { searchViewModel.onQueryChange(it) },
-            label = { Text("Поиск") },
-            leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+            label = { Text(stringResource(R.string.search_field_label)) },
+            leadingIcon = {
+                Icon(
+                    Icons.Default.Search,
+                    contentDescription = stringResource(R.string.cd_search)
+                )
+            },
             trailingIcon = {
                 if (query.isNotEmpty()) {
                     IconButton(onClick = { searchViewModel.onQueryChange("") }) {
-                        Icon(Icons.Default.Close, contentDescription = "Clear search")
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = stringResource(R.string.cd_clear_search)
+                        )
                     }
                 }
             },
@@ -155,9 +171,9 @@ fun SearchScreen(
 
                     if (products.isEmpty()) {
                         val message = if (query.isBlank() && !hasActiveFilters) {
-                            "Начните вводить запрос или выберите фильтры"
+                            stringResource(R.string.search_empty_prompt)
                         } else {
-                            "По заданным условиям ничего не найдено"
+                            stringResource(R.string.search_empty_filtered)
                         }
 
                         Box(
@@ -198,12 +214,12 @@ fun SearchScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Не удалось загрузить результаты",
+                            text = stringResource(R.string.search_error_message),
                             style = MaterialTheme.typography.bodyLarge,
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         Button(onClick = { searchViewModel.retrySearch() }) {
-                            Text("Повторить")
+                            Text(stringResource(R.string.search_retry))
                         }
                     }
                 }
@@ -231,10 +247,10 @@ private fun FiltersSection(
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
     ) {
-        Text("Фильтры", style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(R.string.search_filters_title), style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.height(12.dp))
 
-        Text("Категория", style = MaterialTheme.typography.labelLarge)
+        Text(stringResource(R.string.search_filters_category), style = MaterialTheme.typography.labelLarge)
         Spacer(modifier = Modifier.height(8.dp))
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -252,13 +268,13 @@ private fun FiltersSection(
                         }
                         onCategorySelected(newValue)
                     },
-                    label = { Text(option.label) }
+                    label = { Text(stringResource(id = option.labelRes)) }
                 )
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        Text("Цена", style = MaterialTheme.typography.labelLarge)
+        Text(stringResource(R.string.search_filters_price), style = MaterialTheme.typography.labelLarge)
         Spacer(modifier = Modifier.height(8.dp))
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -275,13 +291,13 @@ private fun FiltersSection(
                             onPriceSelected(option.min, option.max)
                         }
                     },
-                    label = { Text(option.label) }
+                    label = { Text(stringResource(id = option.labelRes)) }
                 )
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        Text("Размер", style = MaterialTheme.typography.labelLarge)
+        Text(stringResource(R.string.search_filters_size), style = MaterialTheme.typography.labelLarge)
         Spacer(modifier = Modifier.height(8.dp))
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -299,13 +315,13 @@ private fun FiltersSection(
                         }
                         onSizeSelected(newSize)
                     },
-                    label = { Text(option.label) }
+                    label = { Text(stringResource(id = option.labelRes)) }
                 )
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        Text("Сортировка", style = MaterialTheme.typography.labelLarge)
+        Text(stringResource(R.string.search_filters_sort), style = MaterialTheme.typography.labelLarge)
         Spacer(modifier = Modifier.height(8.dp))
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -316,7 +332,7 @@ private fun FiltersSection(
                 FilterChip(
                     selected = isSelected,
                     onClick = { onSortSelected(option) },
-                    label = { Text(option.label) }
+                    label = { Text(stringResource(id = option.labelRes)) }
                 )
             }
         }
@@ -349,9 +365,12 @@ private fun SuggestionsSection(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Недавние запросы", style = MaterialTheme.typography.labelLarge)
+                Text(
+                    stringResource(R.string.search_recent_queries_title),
+                    style = MaterialTheme.typography.labelLarge
+                )
                 TextButton(onClick = onClearHistory) {
-                    Text("Очистить")
+                    Text(stringResource(R.string.search_clear_history))
                 }
             }
 
@@ -374,7 +393,10 @@ private fun SuggestionsSection(
         }
 
         if (popularQueries.isNotEmpty()) {
-            Text("Популярно сейчас", style = MaterialTheme.typography.labelLarge)
+            Text(
+                stringResource(R.string.search_popular_title),
+                style = MaterialTheme.typography.labelLarge
+            )
             Spacer(modifier = Modifier.height(8.dp))
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),

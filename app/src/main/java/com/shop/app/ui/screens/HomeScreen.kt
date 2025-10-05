@@ -10,12 +10,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.shop.app.ui.components.ProductRow
 import com.shop.app.ui.components.PromoBanner
 import com.shop.app.ui.components.SearchBar
 import com.shop.app.ui.components.SectionTitle
 import com.shop.app.ui.viewmodels.ProductsUiState
+import com.shop.app.R
 
 @Composable
 fun HomeScreen(
@@ -43,7 +45,7 @@ fun HomeScreen(
                 }
             }
             is ProductsUiState.Success -> {
-                item { SectionTitle(title = "New Arrivals") }
+                item { SectionTitle(titleRes = R.string.home_new_arrivals) }
                 item {
                     ProductRow(
                         products = state.products,
@@ -52,7 +54,7 @@ fun HomeScreen(
                 }
                 item { Spacer(modifier = Modifier.height(16.dp)) }
 
-                item { SectionTitle(title = "You Might Like") }
+                item { SectionTitle(titleRes = R.string.home_recommended) }
                 item {
                     ProductRow(
                         products = state.products.shuffled(),
@@ -66,7 +68,7 @@ fun HomeScreen(
                         modifier = Modifier.fillParentMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(text = "Failed to load products")
+                        Text(text = stringResource(R.string.error_loading_products))
                     }
                 }
             }

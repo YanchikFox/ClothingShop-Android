@@ -2,9 +2,7 @@ package com.shop.app.ui.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.rememberTransformableState
-import androidx.compose.foundation.gestures.transformable
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,7 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -45,9 +42,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -59,6 +53,8 @@ import com.shop.app.data.model.ProductFeature
 import com.shop.app.data.model.ProductReview
 import com.shop.app.di.ServiceLocator
 import com.shop.app.ui.theme.TShopAppTheme
+import androidx.compose.ui.res.stringResource
+import com.shop.app.R
 import java.text.NumberFormat
 import java.util.Locale
 import kotlinx.coroutines.launch
@@ -76,13 +72,13 @@ fun ProductDetailScreen(
 
     if (product == null) {
         Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(text = "Product not found")
+            Text(text = stringResource(R.string.product_not_found))
         }
         return
     }
 
     val currencyFormat = remember {
-        NumberFormat.getCurrencyInstance(Locale("uk", "UA")).apply {
+        NumberFormat.getCurrencyInstance(Locale.getDefault()).apply {
             maximumFractionDigits = 0
         }
     }
@@ -120,16 +116,16 @@ fun ProductDetailScreen(
             )
         }
 
-        DetailSection(title = "Состав") {
+        DetailSection(title = stringResource(R.string.product_detail_composition)) {
             Text(text = product.composition, style = MaterialTheme.typography.bodyMedium)
         }
 
-        DetailSection(title = "Уход") {
+        DetailSection(title = stringResource(R.string.product_detail_care)) {
             Text(text = product.careInstructions, style = MaterialTheme.typography.bodyMedium)
         }
 
         if (product.features.isNotEmpty()) {
-            DetailSection(title = "Характеристики") {
+            DetailSection(title = stringResource(R.string.product_detail_features)) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     product.features.forEachIndexed { index, feature ->
                         Row(
@@ -157,7 +153,7 @@ fun ProductDetailScreen(
         }
 
         if (product.reviews.isNotEmpty()) {
-            DetailSection(title = "Отзывы") {
+            DetailSection(title = stringResource(R.string.product_detail_reviews)) {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     product.reviews.forEach { review ->
                         ReviewCard(review = review)
@@ -176,7 +172,7 @@ fun ProductDetailScreen(
                 onClick = { onAddToCartClick(product, quantity) },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "Добавить в корзину")
+                Text(text = stringResource(R.string.product_add_to_cart))
             }
         }
     }
@@ -201,9 +197,10 @@ private fun ProductImageGallery(
                 .height(360.dp)
         ) { page ->
             val imagePath = imageUrls.getOrNull(page)
-            ZoomableProductImage(
+            ProductImagePage(
                 imagePath = imagePath,
-                contentDescription = contentDescription
+                contentDescription = contentDescription,
+                modifier = Modifier.fillMaxSize()
             )
         }
 
@@ -228,11 +225,7 @@ private fun ProductImageGallery(
                                     MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
                                 }
                             )
-                            .pointerInput(pagerState.pageCount) {
-                                detectTapGestures {
-                                    coroutineScope.launch { pagerState.animateScrollToPage(index) }
-                                }
-                            }
+                            .clickable { coroutineScope.launch { pagerState.animateScrollToPage(index) } }
                     )
                 }
             }
@@ -240,66 +233,29 @@ private fun ProductImageGallery(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun ZoomableProductImage(
+private fun ProductImagePage(
     imagePath: String?,
     contentDescription: String,
     modifier: Modifier = Modifier
 ) {
-    var scale by remember { mutableStateOf(1f) }
-    var offset by remember { mutableStateOf(Offset.Zero) }
-
-    val transformableState = rememberTransformableState { zoomChange, panChange, _ ->
-        val newScale = (scale * zoomChange).coerceIn(1f, 3f)
-        if (newScale == 1f) {
-            offset = Offset.Zero
-        } else {
-            val limitedOffset = offset + panChange
-            val maxOffset = 400f
-            offset = Offset(
-                x = limitedOffset.x.coerceIn(-maxOffset, maxOffset),
-                y = limitedOffset.y.coerceIn(-maxOffset, maxOffset)
-            )
-        }
-        scale = newScale
-    }
-
     Box(
         modifier = modifier
             .fillMaxSize()
-            .clip(RoundedCornerShape(16.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant)
-            .transformable(transformableState)
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onDoubleTap = {
-                        scale = if (scale > 1f) 1f else 2f
-                        if (scale == 1f) {
-                            offset = Offset.Zero
-                        }
-                    }
-                )
-            },
+            .clip(MaterialTheme.shapes.medium)
+            .background(MaterialTheme.colorScheme.surfaceVariant),
         contentAlignment = Alignment.Center
     ) {
         if (imagePath != null) {
             AsyncImage(
                 model = ServiceLocator.imagesBaseUrl + imagePath,
                 contentDescription = contentDescription,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .graphicsLayer {
-                        scaleX = scale
-                        scaleY = scale
-                        translationX = offset.x
-                        translationY = offset.y
-                    },
+                modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
         } else {
             Text(
-                text = "Нет изображения",
+                text = stringResource(R.string.product_image_unavailable),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -347,7 +303,7 @@ private fun ReviewCard(review: ProductReview) {
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "${review.rating}/5",
+                        text = stringResource(R.string.product_review_rating, review.rating),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium
                     )
@@ -373,7 +329,10 @@ private fun QuantitySelector(
         horizontalArrangement = Arrangement.Center
     ) {
         IconButton(onClick = onDecrement, enabled = quantity > 1) {
-            Icon(Icons.Default.Remove, contentDescription = "Decrease quantity")
+            Icon(
+                Icons.Default.Remove,
+                contentDescription = stringResource(R.string.cd_decrease_quantity)
+            )
         }
         Text(
             text = "$quantity",
@@ -382,7 +341,10 @@ private fun QuantitySelector(
             textAlign = TextAlign.Center
         )
         IconButton(onClick = onIncrement) {
-            Icon(Icons.Default.Add, contentDescription = "Increase quantity")
+            Icon(
+                Icons.Default.Add,
+                contentDescription = stringResource(R.string.cd_increase_quantity)
+            )
         }
     }
 }
@@ -407,8 +369,8 @@ fun ProductDetailScreenPreview() {
             ProductFeature("Made in", "Portugal")
         ),
         reviews = listOf(
-            ProductReview("Iryna", 5, "Очень мягкая ткань"),
-            ProductReview("Olena", 4, "Отлично сидит")
+            ProductReview("Iryna", 5, "Extremely soft fabric"),
+            ProductReview("Olena", 4, "Great fit")
         )
     )
 

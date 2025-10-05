@@ -13,12 +13,26 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -30,6 +44,7 @@ import androidx.navigation.compose.rememberNavController
 import com.shop.app.ui.screens.*
 import com.shop.app.ui.theme.TShopAppTheme
 import com.shop.app.ui.viewmodels.*
+import com.shop.app.R
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +63,10 @@ fun AppNavigation() {
     val productsViewModel: ProductsViewModel = viewModel()
     val cartViewModel: CartViewModel = viewModel()
     val authViewModel: AuthViewModel = viewModel()
+    val context = LocalContext.current
+    val languageViewModel: LanguageViewModel = viewModel(
+        factory = LanguageViewModel.provideFactory(context)
+    )
 
     val productsUiState by productsViewModel.uiState.collectAsStateWithLifecycle()
     val cartItems by cartViewModel.cartItems.collectAsStateWithLifecycle()
@@ -55,7 +74,7 @@ fun AppNavigation() {
     val isLoggedIn by authViewModel.isLoggedIn.collectAsStateWithLifecycle()
     val userProfile by authViewModel.userProfile.collectAsStateWithLifecycle()
     val totalPrice by cartViewModel.totalPrice.collectAsStateWithLifecycle()
-    val context = LocalContext.current
+    val languageUiState by languageViewModel.uiState.collectAsStateWithLifecycle()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -66,7 +85,7 @@ fun AppNavigation() {
                 // Show TopAppBar only on home screen
                 if (currentRoute == "home") {
                     TopAppBar(
-                        title = { Text("T SHOP") },
+                        title = { Text(stringResource(id = R.string.app_title)) },
                         actions = {
                             BadgedBox(
                                 badge = {
@@ -82,7 +101,7 @@ fun AppNavigation() {
                                 }) {
                                     Icon(
                                         Icons.Default.ShoppingCart,
-                                        contentDescription = "Cart"
+                                        contentDescription = stringResource(R.string.cd_open_cart)
                                     )
                                 }
                             }
@@ -142,7 +161,15 @@ fun AppNavigation() {
                             products = (productsUiState as ProductsUiState.Success).products,
                             onAddToCartClick = { product, quantity ->
                                 cartViewModel.addToCart(product, quantity)
-                                Toast.makeText(context, "${product.name} x$quantity added to cart", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    context.getString(
+                                        R.string.product_added_to_cart_toast,
+                                        product.name,
+                                        quantity
+                                    ),
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         )
                     }
@@ -163,7 +190,8 @@ fun AppNavigation() {
                         isLoggedIn = isLoggedIn,
                         userProfile = userProfile,
                         onLoginClick = { navController.navigate("login") },
-                        onLogoutClick = { authViewModel.logout() }
+                        onLogoutClick = { authViewModel.logout() },
+                        onSettingsClick = { navController.navigate("settings") }
                     )
                 }
 
@@ -188,6 +216,16 @@ fun AppNavigation() {
                         }
                     )
                 }
+
+                composable("settings") {
+                    SettingsScreen(
+                        uiState = languageUiState,
+                        onLanguageSelected = { option ->
+                            languageViewModel.updateLanguage(option.languageTag)
+                        },
+                        onBackClick = { navController.popBackStack() }
+                    )
+                }
             }
 
             val authStateValue = authState
@@ -198,7 +236,11 @@ fun AppNavigation() {
                         authViewModel.resetUiState()
                     }
                     is AuthUiState.Success -> {
-                        val message = if (state.response != null) "Login successful!" else "Registration successful!"
+                        val message = if (state.response != null) {
+                            context.getString(R.string.auth_login_success)
+                        } else {
+                            context.getString(R.string.auth_registration_success)
+                        }
                         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                         navController.navigate("profile") {
                             popUpTo(navController.graph.findStartDestination().id)
@@ -222,9 +264,9 @@ fun AppNavigation() {
 @Composable
 fun AppBottomBar(navController: NavController) {
     val navItems = listOf(
-        BottomNavItem("Home", "home", Icons.Default.Home),
-        BottomNavItem("Catalog", "catalog", Icons.Default.Search),
-        BottomNavItem("Profile", "profile", Icons.Default.Person)
+        BottomNavItem(R.string.nav_home, "home", Icons.Default.Home),
+        BottomNavItem(R.string.nav_catalog, "catalog", Icons.Default.Search),
+        BottomNavItem(R.string.nav_profile, "profile", Icons.Default.Person)
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -246,8 +288,13 @@ fun AppBottomBar(navController: NavController) {
                             restoreState = true
                         }
                     },
-                    icon = { Icon(item.icon, contentDescription = item.title) },
-                    label = { Text(item.title) }
+                    icon = {
+                        Icon(
+                            item.icon,
+                            contentDescription = stringResource(id = item.titleRes)
+                        )
+                    },
+                    label = { Text(stringResource(id = item.titleRes)) }
                 )
             }
         }
@@ -255,7 +302,7 @@ fun AppBottomBar(navController: NavController) {
 }
 
 data class BottomNavItem(
-    val title: String,
+    val titleRes: Int,
     val route: String,
     val icon: ImageVector
 )

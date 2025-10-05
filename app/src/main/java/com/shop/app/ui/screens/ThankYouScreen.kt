@@ -15,7 +15,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import com.shop.app.ui.theme.TShopAppTheme
+import com.shop.app.R
 
 @Composable
 fun ThankYouScreen(
@@ -31,15 +33,15 @@ fun ThankYouScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "Дякуємо!",
+            text = stringResource(R.string.thank_you_title),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
         )
         Text(
             text = if (orderId != null) {
-                "Ваше замовлення №$orderId успішно оформлено."
+                stringResource(R.string.thank_you_message_with_id, orderId)
             } else {
-                "Ваше замовлення успішно оформлено."
+                stringResource(R.string.thank_you_message_generic)
             },
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
@@ -48,7 +50,7 @@ fun ThankYouScreen(
             onClick = onContinueShopping,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Продовжити покупки")
+            Text(text = stringResource(R.string.thank_you_continue_shopping))
         }
     }
 }

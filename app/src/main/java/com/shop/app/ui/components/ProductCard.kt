@@ -20,6 +20,8 @@ import com.shop.app.BuildConfig
 import com.shop.app.data.model.Product
 import com.shop.app.data.model.ProductFeature
 import com.shop.app.data.model.ProductReview
+import androidx.compose.ui.res.stringResource
+import com.shop.app.R
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -30,7 +32,7 @@ fun ProductCard(
     onClick: () -> Unit
 ) {
     val currencyFormat = remember {
-        NumberFormat.getCurrencyInstance(Locale("uk", "UA")).apply {
+        NumberFormat.getCurrencyInstance(Locale.getDefault()).apply {
             maximumFractionDigits = 0
         }
     }
@@ -53,7 +55,7 @@ fun ProductCard(
                 // Show badge if product is bestseller
                 if (product.isBestseller) {
                     Text(
-                        text = "HIT",
+                        text = stringResource(R.string.product_badge_bestseller),
                         modifier = Modifier
                             .align(Alignment.TopStart)
                             .padding(8.dp)

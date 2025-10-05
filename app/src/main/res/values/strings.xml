@@ -1,3 +1,152 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">T Shop</string>
+    <string name="app_title">T SHOP</string>
+    <string name="cd_open_cart">Open cart</string>
+    <string name="product_added_to_cart_toast">%1$s ×%2$d added to cart</string>
+    <string name="auth_login_success">Login successful!</string>
+    <string name="auth_registration_success">Registration successful!</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_catalog">Catalog</string>
+    <string name="nav_profile">Profile</string>
+
+    <!-- Profile -->
+    <string name="profile_prompt_title">Sign in to your account</string>
+    <string name="profile_prompt_subtitle">Access saved items and order history</string>
+    <string name="profile_prompt_cta">Sign in or register</string>
+    <string name="profile_open_settings">Language &amp; settings</string>
+    <string name="profile_title">My profile</string>
+    <string name="profile_default_name">Guest user</string>
+    <string name="profile_email_format">Email: %1$s</string>
+    <string name="profile_phone_format">Phone: %1$s</string>
+    <string name="profile_phone_unknown">not specified</string>
+    <string name="profile_member_since">Member since: %1$s</string>
+    <string name="profile_addresses_title">Shipping addresses</string>
+    <string name="profile_addresses_empty">You haven\'t added any addresses yet</string>
+    <string name="profile_address_city_country">%1$s, %2$s</string>
+    <string name="profile_address_postal_code">Postal code: %1$s</string>
+    <string name="profile_orders_title">Order history</string>
+    <string name="profile_orders_empty">No orders yet</string>
+    <string name="profile_order_item_format">Order #%1$s\nStatus: %2$s\nTotal: %3$s\nDate: %4$s</string>
+    <string name="profile_logout">Log out</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="cd_navigate_up">Navigate up</string>
+    <string name="settings_language_title">Language</string>
+    <string name="settings_language_description">Choose application language or follow the system.</string>
+    <string name="language_system_default">System default</string>
+    <string name="language_english">English</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_ukrainian">Українська</string>
+
+    <!-- Search -->
+    <string name="search_products_hint">Search products</string>
+    <string name="cd_search">Search</string>
+    <string name="cd_clear_search">Clear search</string>
+    <string name="search_field_label">Search</string>
+    <string name="search_filters_title">Filters</string>
+    <string name="search_filters_category">Category</string>
+    <string name="search_filters_price">Price</string>
+    <string name="search_filters_size">Size</string>
+    <string name="search_filters_sort">Sort</string>
+    <string name="search_filter_category_all">All</string>
+    <string name="search_filter_category_women">Women</string>
+    <string name="search_filter_category_men">Men</string>
+    <string name="search_filter_category_unisex">Unisex</string>
+    <string name="search_filter_price_all">Any price</string>
+    <string name="search_filter_price_under_1500">Under 1500 ₴</string>
+    <string name="search_filter_price_1500_2500">1500–2500 ₴</string>
+    <string name="search_filter_price_over_2500">From 2500 ₴</string>
+    <string name="search_filter_size_all">All sizes</string>
+    <string name="size_xs">XS</string>
+    <string name="size_s">S</string>
+    <string name="size_m">M</string>
+    <string name="size_l">L</string>
+    <string name="size_xl">XL</string>
+    <string name="size_38">38</string>
+    <string name="size_39">39</string>
+    <string name="size_40">40</string>
+    <string name="size_41">41</string>
+    <string name="size_42">42</string>
+    <string name="size_43">43</string>
+    <string name="search_empty_prompt">Start typing or choose filters to explore products</string>
+    <string name="search_empty_filtered">Nothing matches the selected filters</string>
+    <string name="search_error_message">Couldn\'t load results</string>
+    <string name="search_retry">Try again</string>
+    <string name="search_recent_queries_title">Recent searches</string>
+    <string name="search_clear_history">Clear</string>
+    <string name="search_popular_title">Popular now</string>
+    <string name="search_sort_relevance">By relevance</string>
+    <string name="search_sort_price_low_high">Price: low to high</string>
+    <string name="search_sort_price_high_low">Price: high to low</string>
+    <string name="search_sort_newest">Newest</string>
+    <string name="search_sort_name">Alphabetical</string>
+
+    <!-- Home -->
+    <string name="home_new_arrivals">New arrivals</string>
+    <string name="home_recommended">You might like</string>
+    <string name="error_loading_products">Failed to load products</string>
+
+    <!-- Promo -->
+    <string name="promo_banner_title">WAREHOUSE CLEARANCE
+UP TO -60% OFF</string>
+
+    <!-- Product detail -->
+    <string name="product_not_found">Product not found</string>
+    <string name="product_detail_composition">Composition</string>
+    <string name="product_detail_care">Care</string>
+    <string name="product_detail_features">Features</string>
+    <string name="product_detail_reviews">Reviews</string>
+    <string name="product_add_to_cart">Add to cart</string>
+    <string name="product_image_unavailable">No image available</string>
+    <string name="product_review_rating">%1$d/5</string>
+    <string name="product_badge_bestseller">HIT</string>
+
+    <!-- Quantity accessibility -->
+    <string name="cd_decrease_quantity">Decrease quantity</string>
+    <string name="cd_increase_quantity">Increase quantity</string>
+    <string name="cd_remove_item">Remove item</string>
+
+    <!-- Cart -->
+    <string name="cart_empty_message">Your cart is empty</string>
+    <string name="cart_total_amount">Total: %1$s</string>
+    <string name="cart_checkout_placeholder">Checkout will be available in the next version</string>
+
+    <!-- Product lists -->
+    <string name="product_list_empty_message">Products in this category are coming soon</string>
+
+    <!-- Catalog -->
+    <string name="catalog_error_loading">Failed to load categories</string>
+
+    <!-- Auth -->
+    <string name="login_title">Sign in</string>
+    <string name="field_email">Email</string>
+    <string name="field_password">Password</string>
+    <string name="field_name">Name</string>
+    <string name="field_phone">Phone</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="login_register_prompt">No account? Register</string>
+    <string name="register_title">Create account</string>
+    <string name="action_register">Register</string>
+    <string name="register_login_prompt">Already have an account? Sign in</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_save">Save</string>
+
+    <!-- Address management -->
+    <string name="address_label_label">Label</string>
+    <string name="address_line1_label">Street and house</string>
+    <string name="address_line2_label">Apartment, entrance</string>
+    <string name="address_city_label">City</string>
+    <string name="address_postal_code_label">Postal code</string>
+    <string name="address_country_label">Country</string>
+    <string name="address_mark_default">Set as default</string>
+    <string name="address_remove">Remove address</string>
+    <string name="address_add">Add address</string>
+    <string name="profile_edit_title">Edit profile</string>
+
+    <!-- Thank you -->
+    <string name="thank_you_title">Thank you!</string>
+    <string name="thank_you_message_with_id">Your order #%1$s has been placed successfully.</string>
+    <string name="thank_you_message_generic">Your order has been placed successfully.</string>
+    <string name="thank_you_continue_shopping">Continue shopping</string>
 </resources>

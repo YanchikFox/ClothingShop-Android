@@ -2,6 +2,8 @@ package com.shop.app.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.annotation.StringRes
+import com.shop.app.R
 import com.shop.app.di.ServiceLocator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,12 +23,12 @@ data class SearchFilters(
     val sortOption: SearchSortOption = SearchSortOption.Relevance,
 )
 
-enum class SearchSortOption(val label: String, val sortBy: String?, val sortOrder: String?) {
-    Relevance("По релевантности", null, null),
-    PriceLowToHigh("Сначала дешевые", "price", "asc"),
-    PriceHighToLow("Сначала дорогие", "price", "desc"),
-    Newest("Новинки", "created_at", "desc"),
-    Name("По алфавиту", "name", "asc");
+enum class SearchSortOption(@StringRes val labelRes: Int, val sortBy: String?, val sortOrder: String?) {
+    Relevance(R.string.search_sort_relevance, null, null),
+    PriceLowToHigh(R.string.search_sort_price_low_high, "price", "asc"),
+    PriceHighToLow(R.string.search_sort_price_high_low, "price", "desc"),
+    Newest(R.string.search_sort_newest, "created_at", "desc"),
+    Name(R.string.search_sort_name, "name", "asc");
 }
 
 class SearchViewModel : ViewModel() {
@@ -44,7 +46,7 @@ class SearchViewModel : ViewModel() {
     val searchHistory: StateFlow<List<String>> = _searchHistory
 
     private val _popularQueries = MutableStateFlow(
-        listOf("Футболка", "Джинсы", "Кроссовки", "Платье", "Куртка")
+        listOf("T-shirt", "Jeans", "Sneakers", "Dress", "Jacket")
     )
     val popularQueries: StateFlow<List<String>> = _popularQueries
 

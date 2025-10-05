@@ -19,9 +19,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import com.shop.app.data.model.ProfileResponse
+import com.shop.app.R
 
 @Composable
 fun ProfileScreen(
@@ -29,6 +32,7 @@ fun ProfileScreen(
     userProfile: ProfileResponse?,
     onLoginClick: () -> Unit,
     onLogoutClick: () -> Unit,
+    onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -39,6 +43,7 @@ fun ProfileScreen(
             ProfileDetails(
                 profile = userProfile,
                 onLogoutClick = onLogoutClick,
+                onSettingsClick = onSettingsClick,
                 modifier = Modifier.fillMaxSize()
             )
         } else {
@@ -48,18 +53,23 @@ fun ProfileScreen(
                 modifier = Modifier.padding(16.dp)
             ) {
                 Text(
-                    text = "Войдите в свой аккаунт",
+                    text = stringResource(R.string.profile_prompt_title),
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Чтобы просматривать сохраненные товары и историю покупок",
+                    text = stringResource(R.string.profile_prompt_subtitle),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = onLoginClick) {
-                    Text("Войти или зарегистрироваться")
+                    Text(stringResource(R.string.profile_prompt_cta))
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedButton(onClick = onSettingsClick) {
+                    Text(stringResource(R.string.profile_open_settings))
                 }
             }
         }
@@ -70,8 +80,10 @@ fun ProfileScreen(
 private fun ProfileDetails(
     profile: ProfileResponse,
     onLogoutClick: () -> Unit,
+    onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(16.dp),
@@ -79,7 +91,7 @@ private fun ProfileDetails(
     ) {
         item {
             Text(
-                text = "Мой профиль",
+                text = stringResource(R.string.profile_title),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
@@ -97,16 +109,16 @@ private fun ProfileDetails(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = profile.name.takeIf { !it.isNullOrBlank() }
-                            ?: "Безымянный пользователь",
+                        text = profile.name?.takeIf { it.isNotBlank() }
+                            ?: stringResource(R.string.profile_default_name),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
-                    Text(text = "Email: ${profile.email}")
-                    Text(
-                        text = "Телефон: ${profile.phone.takeIf { !it.isNullOrBlank() } ?: "не указан"}"
-                    )
-                    Text(text = "С нами с: ${profile.createdAt}")
+                    Text(text = stringResource(R.string.profile_email_format, profile.email))
+                    val phoneText = profile.phone?.takeIf { it.isNotBlank() }
+                        ?: stringResource(R.string.profile_phone_unknown)
+                    Text(text = stringResource(R.string.profile_phone_format, phoneText))
+                    Text(text = stringResource(R.string.profile_member_since, profile.createdAt))
                 }
             }
         }
@@ -123,25 +135,34 @@ private fun ProfileDetails(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = "Адреса доставки",
+                        text = stringResource(R.string.profile_addresses_title),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
-                    Text(
-                        text = if (profile.addresses.isEmpty()) {
-                            "Вы ещё не добавили адреса"
-                        } else {
-                            profile.addresses.joinToString(separator = "\n\n") { address ->
-                                buildString {
-                                    appendLine(address.label)
-                                    appendLine(address.line1)
-                                    address.line2?.takeIf { it.isNotBlank() }?.let { appendLine(it) }
-                                    appendLine("${address.city}, ${address.country}")
-                                    append("Индекс: ${address.postalCode}")
-                                }
+                    val addressesText = profile.addresses
+                        ?.takeIf { it.isNotEmpty() }
+                        ?.joinToString(separator = "\n\n") { address ->
+                            buildString {
+                                appendLine(address.label)
+                                appendLine(address.line1)
+                                address.line2?.takeIf { it.isNotBlank() }?.let { appendLine(it) }
+                                appendLine(
+                                    context.getString(
+                                        R.string.profile_address_city_country,
+                                        address.city,
+                                        address.country
+                                    )
+                                )
+                                append(
+                                    context.getString(
+                                        R.string.profile_address_postal_code,
+                                        address.postalCode
+                                    )
+                                )
                             }
                         }
-                    )
+                        ?: stringResource(R.string.profile_addresses_empty)
+                    Text(text = addressesText)
                 }
             }
         }
@@ -158,20 +179,33 @@ private fun ProfileDetails(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = "История заказов",
+                        text = stringResource(R.string.profile_orders_title),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
-                    Text(
-                        text = if (profile.orderHistory.isEmpty()) {
-                            "История заказов пока пуста"
-                        } else {
-                            profile.orderHistory.joinToString(separator = "\n\n") { order ->
-                                "Заказ №${order.orderNumber}\nСтатус: ${order.status}\nСумма: ${order.totalAmount}\nДата: ${order.placedAt}"
-                            }
+                    val ordersText = profile.orderHistory
+                        ?.takeIf { it.isNotEmpty() }
+                        ?.joinToString(separator = "\n\n") { order ->
+                            context.getString(
+                                R.string.profile_order_item_format,
+                                order.orderNumber,
+                                order.status,
+                                order.totalAmount,
+                                order.placedAt
+                            )
                         }
-                    )
+                        ?: stringResource(R.string.profile_orders_empty)
+                    Text(text = ordersText)
                 }
+            }
+        }
+
+        item {
+            OutlinedButton(
+                onClick = onSettingsClick,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.profile_open_settings))
             }
         }
 
@@ -180,7 +214,7 @@ private fun ProfileDetails(
                 onClick = onLogoutClick,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Выйти из аккаунта")
+                Text(stringResource(R.string.profile_logout))
             }
         }
     }

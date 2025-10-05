@@ -13,12 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import com.shop.app.data.model.CartItem
 import com.shop.app.data.model.Product
 import com.shop.app.data.model.ProductFeature
 import com.shop.app.data.model.ProductReview
 import com.shop.app.ui.components.CartItemRow
 import com.shop.app.ui.theme.TShopAppTheme
+import com.shop.app.R
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -33,12 +35,11 @@ fun CartScreen(
 ) {
     if (cartItems.isEmpty()) {
         Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(text = "Cart is empty")
+            Text(text = stringResource(R.string.cart_empty_message))
         }
     } else {
-        // Configure Ukrainian locale for currency formatting
         val currencyFormat = remember {
-            NumberFormat.getCurrencyInstance(Locale("uk", "UA")).apply {
+            NumberFormat.getCurrencyInstance(Locale.getDefault()).apply {
                 maximumFractionDigits = 0
             }
         }
@@ -61,13 +62,16 @@ fun CartScreen(
             Column(modifier = Modifier.padding(16.dp)) {
                 // Display calculated total price
                 Text(
-                    text = "Total: ${currencyFormat.format(totalPrice)}",
+                    text = stringResource(
+                        R.string.cart_total_amount,
+                        currencyFormat.format(totalPrice)
+                    ),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Оформление заказов доступно в следующей версии приложения",
+                    text = stringResource(R.string.cart_checkout_placeholder),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

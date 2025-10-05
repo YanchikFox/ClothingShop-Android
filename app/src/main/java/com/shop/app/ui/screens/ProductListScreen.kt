@@ -29,6 +29,8 @@ import com.shop.app.di.ServiceLocator
 import com.shop.app.ui.components.ProductCard
 import com.shop.app.ui.viewmodels.ProductListViewModel
 import com.shop.app.ui.viewmodels.ProductsUiState
+import androidx.compose.ui.res.stringResource
+import com.shop.app.R
 
 @Composable
 fun ProductListScreen(
@@ -85,7 +87,7 @@ fun ProductListScreen(
                         modifier = contentModifier,
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("Products in this category coming soon")
+                        Text(stringResource(R.string.product_list_empty_message))
                     }
                 } else {
                     LazyVerticalGrid(
@@ -107,7 +109,7 @@ fun ProductListScreen(
         }
         is ProductsUiState.Error -> {
             Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Failed to load products")
+                Text(stringResource(R.string.error_loading_products))
             }
         }
     }

@@ -1,0 +1,152 @@
+<resources>
+    <string name="app_name">T Shop</string>
+    <string name="app_title">T SHOP</string>
+    <string name="cd_open_cart">Открыть корзину</string>
+    <string name="product_added_to_cart_toast">%1$s ×%2$d добавлено в корзину</string>
+    <string name="auth_login_success">Вход выполнен!</string>
+    <string name="auth_registration_success">Регистрация успешна!</string>
+    <string name="nav_home">Главная</string>
+    <string name="nav_catalog">Каталог</string>
+    <string name="nav_profile">Профиль</string>
+
+    <!-- Profile -->
+    <string name="profile_prompt_title">Войдите в свой аккаунт</string>
+    <string name="profile_prompt_subtitle">Чтобы просматривать сохранённые товары и историю заказов</string>
+    <string name="profile_prompt_cta">Войти или зарегистрироваться</string>
+    <string name="profile_open_settings">Язык и настройки</string>
+    <string name="profile_title">Мой профиль</string>
+    <string name="profile_default_name">Гость</string>
+    <string name="profile_email_format">Email: %1$s</string>
+    <string name="profile_phone_format">Телефон: %1$s</string>
+    <string name="profile_phone_unknown">не указан</string>
+    <string name="profile_member_since">С нами с: %1$s</string>
+    <string name="profile_addresses_title">Адреса доставки</string>
+    <string name="profile_addresses_empty">Вы ещё не добавили адреса</string>
+    <string name="profile_address_city_country">%1$s, %2$s</string>
+    <string name="profile_address_postal_code">Индекс: %1$s</string>
+    <string name="profile_orders_title">История заказов</string>
+    <string name="profile_orders_empty">История заказов пока пуста</string>
+    <string name="profile_order_item_format">Заказ №%1$s\nСтатус: %2$s\nСумма: %3$s\nДата: %4$s</string>
+    <string name="profile_logout">Выйти</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Настройки</string>
+    <string name="cd_navigate_up">Назад</string>
+    <string name="settings_language_title">Язык</string>
+    <string name="settings_language_description">Выберите язык приложения или используйте системный.</string>
+    <string name="language_system_default">Как в системе</string>
+    <string name="language_english">English</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_ukrainian">Українська</string>
+
+    <!-- Search -->
+    <string name="search_products_hint">Поиск товаров</string>
+    <string name="cd_search">Поиск</string>
+    <string name="cd_clear_search">Очистить поиск</string>
+    <string name="search_field_label">Поиск</string>
+    <string name="search_filters_title">Фильтры</string>
+    <string name="search_filters_category">Категория</string>
+    <string name="search_filters_price">Цена</string>
+    <string name="search_filters_size">Размер</string>
+    <string name="search_filters_sort">Сортировка</string>
+    <string name="search_filter_category_all">Все</string>
+    <string name="search_filter_category_women">Женщины</string>
+    <string name="search_filter_category_men">Мужчины</string>
+    <string name="search_filter_category_unisex">Унисекс</string>
+    <string name="search_filter_price_all">Любая цена</string>
+    <string name="search_filter_price_under_1500">До 1500 ₴</string>
+    <string name="search_filter_price_1500_2500">1500–2500 ₴</string>
+    <string name="search_filter_price_over_2500">От 2500 ₴</string>
+    <string name="search_filter_size_all">Все размеры</string>
+    <string name="size_xs">XS</string>
+    <string name="size_s">S</string>
+    <string name="size_m">M</string>
+    <string name="size_l">L</string>
+    <string name="size_xl">XL</string>
+    <string name="size_38">38</string>
+    <string name="size_39">39</string>
+    <string name="size_40">40</string>
+    <string name="size_41">41</string>
+    <string name="size_42">42</string>
+    <string name="size_43">43</string>
+    <string name="search_empty_prompt">Начните ввод или выберите фильтры, чтобы найти товары</string>
+    <string name="search_empty_filtered">По выбранным условиям ничего не найдено</string>
+    <string name="search_error_message">Не удалось загрузить результаты</string>
+    <string name="search_retry">Повторить</string>
+    <string name="search_recent_queries_title">Недавние запросы</string>
+    <string name="search_clear_history">Очистить</string>
+    <string name="search_popular_title">Популярно сейчас</string>
+    <string name="search_sort_relevance">По релевантности</string>
+    <string name="search_sort_price_low_high">Сначала дешёвые</string>
+    <string name="search_sort_price_high_low">Сначала дорогие</string>
+    <string name="search_sort_newest">Новинки</string>
+    <string name="search_sort_name">По алфавиту</string>
+
+    <!-- Home -->
+    <string name="home_new_arrivals">Новинки</string>
+    <string name="home_recommended">Вам может понравиться</string>
+    <string name="error_loading_products">Не удалось загрузить товары</string>
+
+    <!-- Promo -->
+    <string name="promo_banner_title">РАСПРОДАЖА СКЛАДА
+СКИДКИ ДО -60%</string>
+
+    <!-- Product detail -->
+    <string name="product_not_found">Товар не найден</string>
+    <string name="product_detail_composition">Состав</string>
+    <string name="product_detail_care">Уход</string>
+    <string name="product_detail_features">Характеристики</string>
+    <string name="product_detail_reviews">Отзывы</string>
+    <string name="product_add_to_cart">Добавить в корзину</string>
+    <string name="product_image_unavailable">Нет изображения</string>
+    <string name="product_review_rating">%1$d/5</string>
+    <string name="product_badge_bestseller">ХИТ</string>
+
+    <!-- Quantity accessibility -->
+    <string name="cd_decrease_quantity">Уменьшить количество</string>
+    <string name="cd_increase_quantity">Увеличить количество</string>
+    <string name="cd_remove_item">Удалить товар</string>
+
+    <!-- Cart -->
+    <string name="cart_empty_message">Корзина пуста</string>
+    <string name="cart_total_amount">Итого: %1$s</string>
+    <string name="cart_checkout_placeholder">Оформление заказа будет доступно в следующей версии</string>
+
+    <!-- Product lists -->
+    <string name="product_list_empty_message">Товары этой категории появятся позже</string>
+
+    <!-- Catalog -->
+    <string name="catalog_error_loading">Не удалось загрузить категории</string>
+
+    <!-- Auth -->
+    <string name="login_title">Вход</string>
+    <string name="field_email">Email</string>
+    <string name="field_password">Пароль</string>
+    <string name="field_name">Имя</string>
+    <string name="field_phone">Телефон</string>
+    <string name="action_sign_in">Войти</string>
+    <string name="login_register_prompt">Нет аккаунта? Зарегистрируйтесь</string>
+    <string name="register_title">Регистрация</string>
+    <string name="action_register">Зарегистрироваться</string>
+    <string name="register_login_prompt">Уже есть аккаунт? Войдите</string>
+    <string name="action_cancel">Отмена</string>
+    <string name="action_save">Сохранить</string>
+
+    <!-- Address management -->
+    <string name="address_label_label">Название</string>
+    <string name="address_line1_label">Улица и дом</string>
+    <string name="address_line2_label">Квартира, подъезд</string>
+    <string name="address_city_label">Город</string>
+    <string name="address_postal_code_label">Почтовый индекс</string>
+    <string name="address_country_label">Страна</string>
+    <string name="address_mark_default">Сделать основным</string>
+    <string name="address_remove">Удалить адрес</string>
+    <string name="address_add">Добавить адрес</string>
+    <string name="profile_edit_title">Редактирование профиля</string>
+
+    <!-- Thank you -->
+    <string name="thank_you_title">Дякуємо!</string>
+    <string name="thank_you_message_with_id">Ваше замовлення №%1$s успішно оформлено.</string>
+    <string name="thank_you_message_generic">Ваше замовлення успішно оформлено.</string>
+    <string name="thank_you_continue_shopping">Продовжити покупки</string>
+</resources>

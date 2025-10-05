@@ -30,6 +30,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.shop.app.data.model.ProfileResponse
 import com.shop.app.data.model.UpdateAddressRequest
+import androidx.compose.ui.res.stringResource
+import com.shop.app.R
 
 @Composable
 fun EditProfileScreen(
@@ -52,7 +54,7 @@ fun EditProfileScreen(
     ) {
         item {
             Text(
-                text = "Редактирование профиля",
+                text = stringResource(R.string.profile_edit_title),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
@@ -62,7 +64,7 @@ fun EditProfileScreen(
             OutlinedTextField(
                 value = name.value,
                 onValueChange = { name.value = it },
-                label = { Text("Имя") },
+                label = { Text(stringResource(R.string.field_name)) },
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -71,7 +73,7 @@ fun EditProfileScreen(
             OutlinedTextField(
                 value = phone.value,
                 onValueChange = { phone.value = it },
-                label = { Text("Телефон") },
+                label = { Text(stringResource(R.string.field_phone)) },
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -85,14 +87,14 @@ fun EditProfileScreen(
                     onClick = onBack,
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Отмена")
+                    Text(stringResource(R.string.action_cancel))
                 }
 
                 Button(
                     onClick = { onSave(name.value.trim(), phone.value.trim()) },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Сохранить")
+                    Text(stringResource(R.string.action_save))
                 }
             }
         }
@@ -106,7 +108,7 @@ fun ManageAddressesScreen(
     onBack: () -> Unit,
 ) {
     val addressState = remember {
-        mutableStateListOf(*profile.addresses.map {
+        mutableStateListOf(*profile.addresses.orEmpty().map {
             EditableAddress(
                 label = it.label,
                 line1 = it.line1,
@@ -128,7 +130,7 @@ fun ManageAddressesScreen(
     ) {
         item {
             Text(
-                text = "Адреса",
+                text = stringResource(R.string.profile_addresses_title),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
@@ -148,7 +150,7 @@ fun ManageAddressesScreen(
                         onValueChange = {
                             addressState[index] = addressState[index].copy(label = it)
                         },
-                        label = { Text("Название") },
+                        label = { Text(stringResource(R.string.address_label_label)) },
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
@@ -156,7 +158,7 @@ fun ManageAddressesScreen(
                         onValueChange = {
                             addressState[index] = addressState[index].copy(line1 = it)
                         },
-                        label = { Text("Улица и дом") },
+                        label = { Text(stringResource(R.string.address_line1_label)) },
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
@@ -164,7 +166,7 @@ fun ManageAddressesScreen(
                         onValueChange = {
                             addressState[index] = addressState[index].copy(line2 = it)
                         },
-                        label = { Text("Квартира, подъезд") },
+                        label = { Text(stringResource(R.string.address_line2_label)) },
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
@@ -172,7 +174,7 @@ fun ManageAddressesScreen(
                         onValueChange = {
                             addressState[index] = addressState[index].copy(city = it)
                         },
-                        label = { Text("Город") },
+                        label = { Text(stringResource(R.string.address_city_label)) },
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
@@ -180,7 +182,7 @@ fun ManageAddressesScreen(
                         onValueChange = {
                             addressState[index] = addressState[index].copy(postalCode = it)
                         },
-                        label = { Text("Почтовый индекс") },
+                        label = { Text(stringResource(R.string.address_postal_code_label)) },
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
@@ -188,7 +190,7 @@ fun ManageAddressesScreen(
                         onValueChange = {
                             addressState[index] = addressState[index].copy(country = it)
                         },
-                        label = { Text("Страна") },
+                        label = { Text(stringResource(R.string.address_country_label)) },
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -205,7 +207,7 @@ fun ManageAddressesScreen(
                                 }
                             }
                         )
-                        Text("Сделать основным")
+                        Text(stringResource(R.string.address_mark_default))
                     }
 
                     TextButton(
@@ -215,7 +217,7 @@ fun ManageAddressesScreen(
                             }
                         }
                     ) {
-                        Text("Удалить адрес")
+                        Text(stringResource(R.string.address_remove))
                     }
                 }
             }
@@ -235,7 +237,7 @@ fun ManageAddressesScreen(
                     )
                 )
             }) {
-                Text("Добавить адрес")
+                Text(stringResource(R.string.address_add))
             }
         }
 
@@ -249,7 +251,7 @@ fun ManageAddressesScreen(
                     onClick = onBack,
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Отмена")
+                    Text(stringResource(R.string.action_cancel))
                 }
 
                 Button(
@@ -296,7 +298,7 @@ fun ManageAddressesScreen(
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Сохранить")
+                    Text(stringResource(R.string.action_save))
                 }
             }
         }

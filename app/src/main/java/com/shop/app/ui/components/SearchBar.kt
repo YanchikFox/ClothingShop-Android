@@ -14,7 +14,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.shop.app.R
 
 @Composable
 fun SearchBar(
@@ -31,8 +33,13 @@ fun SearchBar(
         OutlinedTextField(
             value = "",
             onValueChange = {},
-            label = { Text("Search products") },
-            leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+            label = { Text(stringResource(R.string.search_products_hint)) },
+            leadingIcon = {
+                Icon(
+                    Icons.Default.Search,
+                    contentDescription = stringResource(R.string.cd_search)
+                )
+            },
             modifier = Modifier.fillMaxWidth(),
             enabled = false, // Important change!
             readOnly = true,
