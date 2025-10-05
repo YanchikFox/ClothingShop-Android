@@ -69,7 +69,15 @@ interface ApiService {
     )
 
     @GET("api/search")
-    suspend fun searchProducts(@Query("q") query: String): List<Product>
+    suspend fun searchProducts(
+        @Query("q") query: String? = null,
+        @Query("categoryId") categoryId: String? = null,
+        @Query("minPrice") minPrice: Double? = null,
+        @Query("maxPrice") maxPrice: Double? = null,
+        @Query("size") size: String? = null,
+        @Query("sortBy") sortBy: String? = null,
+        @Query("sortOrder") sortOrder: String? = null,
+    ): List<Product>
 
     @POST("api/orders")
     suspend fun placeOrder(
