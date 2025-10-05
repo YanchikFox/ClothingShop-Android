@@ -17,8 +17,11 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -35,12 +38,22 @@ import com.shop.app.R
 @Composable
 fun ProductListScreen(
     modifier: Modifier = Modifier,
+    languageTag: String?,
     onProductClick: (String) -> Unit,
     productListViewModel: ProductListViewModel = viewModel()
 ) {
     val uiState by productListViewModel.uiState.collectAsState()
     val filters by productListViewModel.filters.collectAsState()
     val selectedCategoryId by productListViewModel.selectedCategoryId.collectAsState()
+
+    val skipFirstRefresh = remember { mutableStateOf(true) }
+    LaunchedEffect(languageTag) {
+        if (skipFirstRefresh.value) {
+            skipFirstRefresh.value = false
+        } else {
+            productListViewModel.refreshForLanguageChange()
+        }
+    }
 
     when (val state = uiState) {
         is ProductsUiState.Loading -> {

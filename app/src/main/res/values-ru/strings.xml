@@ -28,6 +28,12 @@
     <string name="profile_orders_empty">История заказов пока пуста</string>
     <string name="profile_order_item_format">Заказ №%1$s\nСтатус: %2$s\nСумма: %3$s\nДата: %4$s</string>
     <string name="profile_logout">Выйти</string>
+    <string name="profile_edit_action">Редактировать профиль</string>
+    <string name="profile_update_success">Профиль обновлён</string>
+    <string name="profile_phone_error">Введите минимум 5 цифр или оставьте поле пустым</string>
+    <string name="profile_edit_make_default">Использовать как адрес по умолчанию</string>
+    <string name="profile_edit_address_error">Заполните все обязательные поля адреса</string>
+    <string name="profile_address_default_badge">По умолчанию</string>
 
     <!-- Settings -->
     <string name="settings_title">Настройки</string>
@@ -76,6 +82,11 @@
     <string name="search_recent_queries_title">Недавние запросы</string>
     <string name="search_clear_history">Очистить</string>
     <string name="search_popular_title">Популярно сейчас</string>
+    <string name="search_popular_query_tshirts">Футболки с принтом</string>
+    <string name="search_popular_query_dresses">Летние платья</string>
+    <string name="search_popular_query_outerwear">Тёплая верхняя одежда</string>
+    <string name="search_popular_query_sneakers">Минималистичные кеды</string>
+    <string name="search_popular_query_accessories">Повседневные аксессуары</string>
     <string name="search_sort_relevance">По релевантности</string>
     <string name="search_sort_price_low_high">Сначала дешёвые</string>
     <string name="search_sort_price_high_low">Сначала дорогие</string>

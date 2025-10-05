@@ -35,4 +35,8 @@ class ProductsViewModel : ViewModel() {
             }
         }
     }
+
+    fun refreshProducts() {
+        fetchProducts()
+    }
 }

@@ -28,6 +28,12 @@
     <string name="profile_orders_empty">No orders yet</string>
     <string name="profile_order_item_format">Order #%1$s\nStatus: %2$s\nTotal: %3$s\nDate: %4$s</string>
     <string name="profile_logout">Log out</string>
+    <string name="profile_edit_action">Edit profile</string>
+    <string name="profile_update_success">Profile updated</string>
+    <string name="profile_phone_error">Enter at least 5 digits or leave empty</string>
+    <string name="profile_edit_make_default">Use as default address</string>
+    <string name="profile_edit_address_error">Fill in all required address fields</string>
+    <string name="profile_address_default_badge">Default</string>
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>
@@ -76,6 +82,11 @@
     <string name="search_recent_queries_title">Recent searches</string>
     <string name="search_clear_history">Clear</string>
     <string name="search_popular_title">Popular now</string>
+    <string name="search_popular_query_tshirts">Graphic T-shirts</string>
+    <string name="search_popular_query_dresses">Summer dresses</string>
+    <string name="search_popular_query_outerwear">Warm outerwear</string>
+    <string name="search_popular_query_sneakers">Minimal sneakers</string>
+    <string name="search_popular_query_accessories">Everyday accessories</string>
     <string name="search_sort_relevance">By relevance</string>
     <string name="search_sort_price_low_high">Price: low to high</string>
     <string name="search_sort_price_high_low">Price: high to low</string>

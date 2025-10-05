@@ -56,6 +56,14 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun refreshForLanguageChange() {
+        viewModelScope.launch {
+            if (isLoggedInFlow.first()) {
+                fetchCartFromServer()
+            }
+        }
+    }
+
     fun addToCart(product: Product, quantity: Int = 1) {
         viewModelScope.launch {
             if (isLoggedInFlow.first()) {

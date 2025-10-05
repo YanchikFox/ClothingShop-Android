@@ -46,9 +46,15 @@ class SearchViewModel : ViewModel() {
     val searchHistory: StateFlow<List<String>> = _searchHistory
 
     private val _popularQueries = MutableStateFlow(
-        listOf("T-shirt", "Jeans", "Sneakers", "Dress", "Jacket")
+        listOf(
+            R.string.search_popular_query_tshirts,
+            R.string.search_popular_query_dresses,
+            R.string.search_popular_query_outerwear,
+            R.string.search_popular_query_sneakers,
+            R.string.search_popular_query_accessories,
+        )
     )
-    val popularQueries: StateFlow<List<String>> = _popularQueries
+    val popularQueries: StateFlow<List<Int>> = _popularQueries
 
     init {
         viewModelScope.launch {
@@ -104,6 +110,10 @@ class SearchViewModel : ViewModel() {
         viewModelScope.launch {
             executeSearch(_query.value, _filters.value)
         }
+    }
+
+    fun onLanguageChanged() {
+        retrySearch()
     }
 
     private suspend fun executeSearch(query: String, filters: SearchFilters) {

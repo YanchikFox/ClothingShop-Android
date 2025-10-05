@@ -75,4 +75,9 @@ class ProductListViewModel(
             }
         }
     }
+
+    fun refreshForLanguageChange() {
+        loadFilters()
+        fetchProductsByCategory(_selectedCategoryId.value)
+    }
 }

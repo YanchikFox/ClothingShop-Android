@@ -40,4 +40,8 @@ class CatalogViewModel : ViewModel() {
             }
         }
     }
+
+    fun refreshCategories() {
+        fetchCategories()
+    }
 }

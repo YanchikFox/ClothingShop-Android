@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.shop.app.data.model.AuthRequest
 import com.shop.app.data.model.AuthResponse
 import com.shop.app.data.model.ProfileResponse
+import com.shop.app.data.model.ProfileUpdateRequest
 import com.shop.app.data.repository.AuthRepository
 import com.shop.app.data.repository.UserPreferencesRepository
 import kotlinx.coroutines.flow.*
@@ -18,6 +19,13 @@ sealed interface AuthUiState {
     data class Success(val response: AuthResponse? = null) : AuthUiState
 }
 
+sealed interface ProfileUpdateState {
+    data object Idle : ProfileUpdateState
+    data object Loading : ProfileUpdateState
+    data object Success : ProfileUpdateState
+    data class Error(val message: String) : ProfileUpdateState
+}
+
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val authRepository = AuthRepository()
     private val userPreferencesRepository = UserPreferencesRepository(application)
@@ -27,6 +35,9 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _userProfile = MutableStateFlow<ProfileResponse?>(null)
     val userProfile: StateFlow<ProfileResponse?> = _userProfile
+
+    private val _profileUpdateState = MutableStateFlow<ProfileUpdateState>(ProfileUpdateState.Idle)
+    val profileUpdateState: StateFlow<ProfileUpdateState> = _profileUpdateState
 
     val isLoggedIn: StateFlow<Boolean> = userPreferencesRepository.authTokenFlow
         .map { token -> token != null }
@@ -91,10 +102,35 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     fun logout() {
         viewModelScope.launch {
             userPreferencesRepository.clearAuthToken()
+            _profileUpdateState.value = ProfileUpdateState.Idle
         }
     }
 
     fun resetUiState() {
         _authUiState.value = AuthUiState.Idle
+    }
+
+    fun updateProfile(request: ProfileUpdateRequest) {
+        viewModelScope.launch {
+            _profileUpdateState.value = ProfileUpdateState.Loading
+            try {
+                val token = userPreferencesRepository.authTokenFlow.first()
+                if (token == null) {
+                    _profileUpdateState.value = ProfileUpdateState.Error("Authentication required")
+                    return@launch
+                }
+
+                val updatedProfile = authRepository.updateProfile(token, request)
+                _userProfile.value = updatedProfile
+                _profileUpdateState.value = ProfileUpdateState.Success
+            } catch (e: Exception) {
+                _profileUpdateState.value =
+                    ProfileUpdateState.Error(e.message ?: "Failed to update profile")
+            }
+        }
+    }
+
+    fun resetProfileUpdateState() {
+        _profileUpdateState.value = ProfileUpdateState.Idle
     }
 }

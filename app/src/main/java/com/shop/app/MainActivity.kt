@@ -35,6 +35,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.shop.app.di.ServiceLocator
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -49,6 +50,7 @@ import com.shop.app.R
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ServiceLocator.initialize(applicationContext)
         enableEdgeToEdge()
         setContent {
             AppNavigation()
@@ -73,6 +75,7 @@ fun AppNavigation() {
     val authState by authViewModel.authUiState.collectAsStateWithLifecycle()
     val isLoggedIn by authViewModel.isLoggedIn.collectAsStateWithLifecycle()
     val userProfile by authViewModel.userProfile.collectAsStateWithLifecycle()
+    val profileUpdateState by authViewModel.profileUpdateState.collectAsStateWithLifecycle()
     val totalPrice by cartViewModel.totalPrice.collectAsStateWithLifecycle()
     val languageUiState by languageViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -80,6 +83,11 @@ fun AppNavigation() {
     val currentRoute = navBackStackEntry?.destination?.route
 
     TShopAppTheme {
+        LaunchedEffect(languageUiState.selectedLanguageTag) {
+            productsViewModel.refreshProducts()
+            cartViewModel.refreshForLanguageChange()
+        }
+
         Scaffold(
             topBar = {
                 // Show TopAppBar only on home screen
@@ -132,6 +140,7 @@ fun AppNavigation() {
 
                 composable("search") {
                     SearchScreen(
+                        languageTag = languageUiState.selectedLanguageTag,
                         onProductClick = { productId ->
                             navController.navigate("product_detail/$productId")
                         }
@@ -140,6 +149,7 @@ fun AppNavigation() {
 
                 composable("catalog") {
                     CatalogScreen(
+                        languageTag = languageUiState.selectedLanguageTag,
                         onCategoryClick = { categoryId ->
                             navController.navigate("product_list/$categoryId")
                         }
@@ -148,6 +158,7 @@ fun AppNavigation() {
 
                 composable("product_list/{categoryId}") {
                     ProductListScreen(
+                        languageTag = languageUiState.selectedLanguageTag,
                         onProductClick = { productId ->
                             navController.navigate("product_detail/$productId")
                         }
@@ -189,9 +200,12 @@ fun AppNavigation() {
                     ProfileScreen(
                         isLoggedIn = isLoggedIn,
                         userProfile = userProfile,
+                        profileUpdateState = profileUpdateState,
                         onLoginClick = { navController.navigate("login") },
                         onLogoutClick = { authViewModel.logout() },
-                        onSettingsClick = { navController.navigate("settings") }
+                        onSettingsClick = { navController.navigate("settings") },
+                        onSaveProfile = { request -> authViewModel.updateProfile(request) },
+                        onProfileUpdateHandled = { authViewModel.resetProfileUpdateState() }
                     )
                 }
 

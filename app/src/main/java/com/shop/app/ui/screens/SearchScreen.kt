@@ -92,6 +92,7 @@ private val sizeFilterOptions = listOf(
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
+    languageTag: String?,
     onProductClick: (String) -> Unit,
     searchViewModel: SearchViewModel = viewModel(),
 ) {
@@ -102,6 +103,10 @@ fun SearchScreen(
     val popularQueries by searchViewModel.popularQueries.collectAsState()
 
     val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(languageTag) {
+        searchViewModel.onLanguageChanged()
+    }
 
     Column(modifier = modifier.fillMaxSize()) {
         OutlinedTextField(
@@ -345,7 +350,7 @@ private fun FiltersSection(
 @Composable
 private fun SuggestionsSection(
     history: List<String>,
-    popularQueries: List<String>,
+    popularQueries: List<Int>,
     onSuggestionClick: (String) -> Unit,
     onClearHistory: () -> Unit,
     modifier: Modifier = Modifier,
@@ -398,11 +403,12 @@ private fun SuggestionsSection(
                 style = MaterialTheme.typography.labelLarge
             )
             Spacer(modifier = Modifier.height(8.dp))
+            val localizedPopularQueries = popularQueries.map { stringResource(id = it) }
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                popularQueries.forEach { term ->
+                localizedPopularQueries.forEach { term ->
                     SuggestionChip(
                         onClick = { onSuggestionClick(term) },
                         label = { Text(term) }

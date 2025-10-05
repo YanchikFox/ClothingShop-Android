@@ -3,6 +3,7 @@ package com.shop.app.data.repository
 import com.shop.app.data.model.AuthRequest
 import com.shop.app.data.model.AuthResponse
 import com.shop.app.data.model.ProfileResponse
+import com.shop.app.data.model.ProfileUpdateRequest
 import com.shop.app.data.network.ApiService
 import com.shop.app.di.ServiceLocator
 
@@ -19,6 +20,10 @@ class AuthRepository {
 
     suspend fun getProfile(token: String): ProfileResponse {
         return apiService.getProfile(token)
+    }
+
+    suspend fun updateProfile(token: String, request: ProfileUpdateRequest): ProfileResponse {
+        return apiService.updateProfile(token, request)
     }
 
 }

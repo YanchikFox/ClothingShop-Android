@@ -7,6 +7,7 @@ import com.shop.app.data.model.CartItemResponse
 import com.shop.app.data.model.Category
 import com.shop.app.data.model.Product
 import com.shop.app.data.model.ProfileResponse
+import com.shop.app.data.model.ProfileUpdateRequest
 import com.shop.app.data.model.UpdateCartRequest
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -34,6 +35,12 @@ interface ApiService {
 
     @GET("api/profile")
     suspend fun getProfile(@Header("x-auth-token") token: String): ProfileResponse
+
+    @PUT("api/profile")
+    suspend fun updateProfile(
+        @Header("x-auth-token") token: String,
+        @Body request: ProfileUpdateRequest
+    ): ProfileResponse
 
     // Get user's cart
     @GET("api/cart")
