@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.shop.app.data.model.AuthRequest
 import com.shop.app.data.model.AuthResponse
 import com.shop.app.data.model.ProfileResponse
+import com.shop.app.data.model.ProfileUpdateRequest
 import com.shop.app.data.repository.AuthRepository
 import com.shop.app.data.repository.UserPreferencesRepository
 import kotlinx.coroutines.flow.*
@@ -91,6 +92,26 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     fun logout() {
         viewModelScope.launch {
             userPreferencesRepository.clearAuthToken()
+        }
+    }
+
+    fun updateProfile(request: ProfileUpdateRequest, onResult: (Boolean) -> Unit = {}) {
+        viewModelScope.launch {
+            try {
+                val token = userPreferencesRepository.authTokenFlow.first()
+                if (token == null) {
+                    onResult(false)
+                    logout()
+                    return@launch
+                }
+
+                val updatedProfile = authRepository.updateProfile(token, request)
+                _userProfile.value = updatedProfile
+                onResult(true)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onResult(false)
+            }
         }
     }
 
