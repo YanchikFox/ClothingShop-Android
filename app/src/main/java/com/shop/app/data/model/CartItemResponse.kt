@@ -11,14 +11,19 @@ data class CartItemResponse(
     val categoryId: String,
     val name: String,
     val description: String,
-    @SerializedName("image_path")
-    val imagePath: String,
     @SerializedName("price")
     val price: Double,
     @SerializedName("price_string")
     val priceString: String,
     @SerializedName("is_bestseller")
     val isBestseller: Boolean,
+    @SerializedName("imageUrls")
+    val imageUrls: List<String>,
+    val composition: String,
+    @SerializedName("careInstructions")
+    val careInstructions: String,
+    val features: List<ProductFeature>,
+    val reviews: List<ProductReview>,
     // And quantity field from cart_items
     val quantity: Int
 )

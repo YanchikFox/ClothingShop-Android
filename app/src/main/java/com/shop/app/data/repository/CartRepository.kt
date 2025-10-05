@@ -26,10 +26,14 @@ class CartRepository {
                 categoryId = responseItem.categoryId,
                 name = responseItem.name,
                 description = responseItem.description,
-                imagePath = responseItem.imagePath,
                 price = responseItem.price,
                 priceString = responseItem.priceString,
-                isBestseller = responseItem.isBestseller
+                isBestseller = responseItem.isBestseller,
+                imageUrls = responseItem.imageUrls,
+                composition = responseItem.composition,
+                careInstructions = responseItem.careInstructions,
+                features = responseItem.features,
+                reviews = responseItem.reviews
             )
             // Create CartItem
             CartItem(product = product, quantity = responseItem.quantity)

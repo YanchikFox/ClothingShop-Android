@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -19,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.shop.app.BuildConfig
 import com.shop.app.data.model.Product
+import com.shop.app.data.model.ProductFeature
+import com.shop.app.data.model.ProductReview
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -34,13 +35,15 @@ fun ProductCard(
         }
     }
 
+    val mainImagePath = remember(product.imageUrls) { product.imageUrls.firstOrNull() }
+
     Card(modifier = modifier.clickable(onClick = onClick)) {
         Column {
             // Box for displaying image and "Hit" badge
             Box {
                 AsyncImage(
                     // Build full URL for image
-                    model = BuildConfig.IMAGES_BASE_URL + product.imagePath,
+                    model = mainImagePath?.let { BuildConfig.IMAGES_BASE_URL + it },
                     contentDescription = product.name,
                     modifier = Modifier.fillMaxWidth().aspectRatio(0.8f),
                     contentScale = ContentScale.Crop
@@ -91,10 +94,19 @@ fun ProductCardPreview() {
         categoryId = "unisex",
         name = "Sample Product",
         description = "Description",
-        imagePath = "images/1.jpg",
         price = 1200.0,
         priceString = "1 200 ₴",
-        isBestseller = true
+        isBestseller = true,
+        imageUrls = listOf("images/1.jpg", "images/1_detail.jpg"),
+        composition = "100% cotton",
+        careInstructions = "Machine wash cold",
+        features = listOf(
+            ProductFeature(title = "Fit", value = "Relaxed"),
+            ProductFeature(title = "Length", value = "Standard")
+        ),
+        reviews = listOf(
+            ProductReview(author = "Iryna", rating = 5, comment = "Great")
+        )
     )
     ProductCard(
         product = sampleProduct,

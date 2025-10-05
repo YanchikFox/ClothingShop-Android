@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.shop.app.data.model.CartItem
 import com.shop.app.data.model.Product
+import com.shop.app.data.model.ProductFeature
+import com.shop.app.data.model.ProductReview
 import com.shop.app.di.ServiceLocator
 import com.shop.app.ui.theme.TShopAppTheme
 import java.text.NumberFormat
@@ -42,9 +44,13 @@ fun CartItemRow(
             }
         }
 
+        val previewImage = remember(cartItem.product.imageUrls) {
+            cartItem.product.imageUrls.firstOrNull()
+        }
+
         AsyncImage(
-            // Use imagePath and build full URL
-            model = ServiceLocator.imagesBaseUrl + cartItem.product.imagePath,
+            // Use first image and build full URL
+            model = previewImage?.let { ServiceLocator.imagesBaseUrl + it },
             contentDescription = cartItem.product.name,
             modifier = Modifier
                 .size(80.dp),
@@ -83,13 +89,17 @@ fun CartItemRowPreview() {
     val sampleProduct = Product(
         id = "su001",
         article = "1023",
-        imagePath = "images/1.jpg",
         name = "Your Product 1",
         price = 1200.0,
         priceString = "1 200 ₴",
         description = "Description...",
         isBestseller = true,
-        categoryId = "unisex"
+        categoryId = "unisex",
+        imageUrls = listOf("images/1.jpg"),
+        composition = "100% cotton",
+        careInstructions = "Machine wash cold",
+        features = listOf(ProductFeature("Fit", "Regular")),
+        reviews = listOf(ProductReview("Oleh", 5, "Love it"))
     )
     val sampleCartItem = CartItem(product = sampleProduct, quantity = 2)
     TShopAppTheme {

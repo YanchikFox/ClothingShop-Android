@@ -9,10 +9,6 @@ data class Product(
     val categoryId: String,
     val name: String,
     val description: String,
-
-    @SerializedName("image_path")
-    val imagePath: String,
-
     @SerializedName("price")
     val price: Double,
 
@@ -20,5 +16,24 @@ data class Product(
     val priceString: String,
 
     @SerializedName("is_bestseller")
-    val isBestseller: Boolean
+    val isBestseller: Boolean,
+
+    @SerializedName("imageUrls")
+    val imageUrls: List<String>,
+    val composition: String,
+    @SerializedName("careInstructions")
+    val careInstructions: String,
+    val features: List<ProductFeature>,
+    val reviews: List<ProductReview>
+)
+
+data class ProductFeature(
+    val title: String,
+    val value: String
+)
+
+data class ProductReview(
+    val author: String,
+    val rating: Int,
+    val comment: String
 )

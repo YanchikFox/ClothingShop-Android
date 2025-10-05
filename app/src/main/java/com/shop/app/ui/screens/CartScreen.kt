@@ -17,6 +17,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shop.app.data.model.CartItem
 import com.shop.app.data.model.Product
+import com.shop.app.data.model.ProductFeature
+import com.shop.app.data.model.ProductReview
 import com.shop.app.ui.components.CartItemRow
 import com.shop.app.ui.theme.TShopAppTheme
 import java.text.NumberFormat
@@ -118,10 +120,14 @@ fun CartScreenPreview() {
         categoryId = "unisex",
         name = "Sample Product",
         description = "Description",
-        imagePath = "images/1.jpg",
         price = 1200.0,
         priceString = "1 200 ₴",
-        isBestseller = true
+        isBestseller = true,
+        imageUrls = listOf("images/1.jpg"),
+        composition = "100% cotton",
+        careInstructions = "Machine wash cold",
+        features = listOf(ProductFeature("Fit", "Relaxed")),
+        reviews = listOf(ProductReview("Oleh", 5, "Great quality"))
     )
     val sampleCartItems = listOf(CartItem(product = sampleProduct, quantity = 2))
     TShopAppTheme {
