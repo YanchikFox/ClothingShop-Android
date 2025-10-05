@@ -2,7 +2,6 @@ package com.shop.app.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -26,9 +25,7 @@ fun CategoryCard(
     onClick: () -> Unit
 ) {
     Card(
-        modifier = modifier
-            .aspectRatio(1f) // Make card square
-            .clickable(onClick = onClick)
+        modifier = modifier.clickable(onClick = onClick)
     ) {
         Box(contentAlignment = Alignment.Center) {
             // Background image

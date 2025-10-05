@@ -7,7 +7,8 @@ data class CartItemResponse(
     // All fields from Product
     val id: String,
     val article: String,
-    val gender: String,
+    @SerializedName("category_id")
+    val categoryId: String,
     val name: String,
     val description: String,
     @SerializedName("image_path")

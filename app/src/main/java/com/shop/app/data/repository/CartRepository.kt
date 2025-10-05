@@ -23,7 +23,7 @@ class CartRepository {
             val product = Product(
                 id = responseItem.id,
                 article = responseItem.article,
-                gender = responseItem.gender,
+                categoryId = responseItem.categoryId,
                 name = responseItem.name,
                 description = responseItem.description,
                 imagePath = responseItem.imagePath,

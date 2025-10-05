@@ -89,7 +89,7 @@ fun CartItemRowPreview() {
         priceString = "1 200 ₴",
         description = "Description...",
         isBestseller = true,
-        gender = "unisex"
+        categoryId = "unisex"
     )
     val sampleCartItem = CartItem(product = sampleProduct, quantity = 2)
     TShopAppTheme {

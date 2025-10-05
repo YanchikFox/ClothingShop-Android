@@ -88,7 +88,7 @@ fun ProductCardPreview() {
     val sampleProduct = Product(
         id = "su001",
         article = "1023",
-        gender = "unisex",
+        categoryId = "unisex",
         name = "Sample Product",
         description = "Description",
         imagePath = "images/1.jpg",

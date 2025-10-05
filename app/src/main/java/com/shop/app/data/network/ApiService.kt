@@ -23,7 +23,7 @@ import retrofit2.http.Query
 interface ApiService {
     // Products and Categories
     @GET("api/products")
-    suspend fun getProducts(@Query("gender") gender: String? = null): List<Product>
+    suspend fun getProducts(@Query("categoryId") categoryId: String? = null): List<Product>
 
     @GET("api/categories")
     suspend fun getCategories(): List<Category>
