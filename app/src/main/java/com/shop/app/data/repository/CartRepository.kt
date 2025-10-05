@@ -2,10 +2,10 @@ package com.shop.app.data.repository
 
 import com.shop.app.data.model.*
 import com.shop.app.data.network.ApiService
-import com.shop.app.data.network.RetrofitInstance
+import com.shop.app.di.ServiceLocator
 
 class CartRepository {
-    private val apiService: ApiService = RetrofitInstance.api
+    private val apiService: ApiService = ServiceLocator.apiService
 
     suspend fun getCart(token: String): List<CartItem> {
         // Get "flat" response from server

@@ -2,7 +2,7 @@ package com.shop.app.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shop.app.data.network.RetrofitInstance
+import com.shop.app.di.ServiceLocator
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,7 +35,7 @@ class SearchViewModel : ViewModel() {
             delay(300L) // Wait 300 milliseconds
             _uiState.value = ProductsUiState.Loading
             try {
-                val results = RetrofitInstance.api.searchProducts(query)
+                val results = ServiceLocator.apiService.searchProducts(query)
                 _uiState.value = ProductsUiState.Success(results)
             } catch (e: Exception) {
                 e.printStackTrace()

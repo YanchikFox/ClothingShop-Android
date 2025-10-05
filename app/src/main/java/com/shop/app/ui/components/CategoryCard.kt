@@ -17,7 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.shop.app.data.model.Category
-import com.shop.app.data.network.RetrofitInstance
+import com.shop.app.di.ServiceLocator
 
 @Composable
 fun CategoryCard(
@@ -33,7 +33,7 @@ fun CategoryCard(
         Box(contentAlignment = Alignment.Center) {
             // Background image
             AsyncImage(
-                model = RetrofitInstance.BASE_IMAGE_URL + category.imagePath,
+                model = ServiceLocator.imagesBaseUrl + category.imagePath,
                 contentDescription = category.name,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop

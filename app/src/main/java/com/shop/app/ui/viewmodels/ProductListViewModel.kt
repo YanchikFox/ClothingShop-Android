@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shop.app.data.model.Product
-import com.shop.app.data.network.RetrofitInstance
+import com.shop.app.di.ServiceLocator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -33,7 +33,7 @@ class ProductListViewModel(
             _uiState.value = ProductsUiState.Loading
             try {
                 // Call our updated method, passing the category ID to it
-                val products = RetrofitInstance.api.getProducts(gender = categoryId)
+                val products = ServiceLocator.apiService.getProducts(gender = categoryId)
                 _uiState.value = ProductsUiState.Success(products)
             } catch (e: Exception) {
                 e.printStackTrace()

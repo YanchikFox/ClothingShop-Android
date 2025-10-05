@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.shop.app.data.model.CartItem
 import com.shop.app.data.model.Product
-import com.shop.app.data.network.RetrofitInstance
+import com.shop.app.di.ServiceLocator
 import com.shop.app.ui.theme.TShopAppTheme
 
 @Composable
@@ -35,7 +35,7 @@ fun CartItemRow(
     ) {
         AsyncImage(
             // Use imagePath and build full URL
-            model = RetrofitInstance.BASE_IMAGE_URL + cartItem.product.imagePath,
+            model = ServiceLocator.imagesBaseUrl + cartItem.product.imagePath,
             contentDescription = cartItem.product.name,
             modifier = Modifier
                 .size(80.dp),

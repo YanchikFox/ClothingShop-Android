@@ -3,7 +3,7 @@ package com.shop.app.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shop.app.data.model.Product
-import com.shop.app.data.network.RetrofitInstance
+import com.shop.app.di.ServiceLocator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -27,7 +27,7 @@ class ProductsViewModel : ViewModel() {
         viewModelScope.launch {
             _uiState.value = ProductsUiState.Loading
             try {
-                val products = RetrofitInstance.api.getProducts()
+                val products = ServiceLocator.apiService.getProducts()
                 _uiState.value = ProductsUiState.Success(products)
             } catch (e: Exception) {
                 e.printStackTrace()

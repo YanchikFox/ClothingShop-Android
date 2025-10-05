@@ -4,10 +4,10 @@ import com.shop.app.data.model.AuthRequest
 import com.shop.app.data.model.AuthResponse
 import com.shop.app.data.model.ProfileResponse
 import com.shop.app.data.network.ApiService
-import com.shop.app.data.network.RetrofitInstance
+import com.shop.app.di.ServiceLocator
 
 class AuthRepository {
-    private val apiService: ApiService = RetrofitInstance.api
+    private val apiService: ApiService = ServiceLocator.apiService
 
     suspend fun registerUser(authRequest: AuthRequest) {
         apiService.registerUser(authRequest)

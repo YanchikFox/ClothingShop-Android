@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.shop.app.data.model.Product
-import com.shop.app.data.network.RetrofitInstance
+import com.shop.app.di.ServiceLocator
 
 @Composable
 fun ProductCard(
@@ -31,7 +31,7 @@ fun ProductCard(
             Box {
                 AsyncImage(
                     // Build full URL for image
-                    model = RetrofitInstance.BASE_IMAGE_URL + product.imagePath,
+                    model = ServiceLocator.imagesBaseUrl + product.imagePath,
                     contentDescription = product.name,
                     modifier = Modifier.fillMaxWidth().aspectRatio(0.8f),
                     contentScale = ContentScale.Crop
