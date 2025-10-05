@@ -120,12 +120,7 @@ class SearchViewModel : ViewModel() {
         try {
             val results = ServiceLocator.apiService.searchProducts(
                 query = normalizedQuery,
-                categoryId = filters.categoryId,
-                minPrice = filters.minPrice,
-                maxPrice = filters.maxPrice,
-                size = filters.size,
-                sortBy = filters.sortOption.sortBy,
-                sortOrder = filters.sortOption.sortOrder,
+                gender = filters.categoryId
             )
             _uiState.value = ProductsUiState.Success(results)
             normalizedQuery?.let { addToHistory(it) }

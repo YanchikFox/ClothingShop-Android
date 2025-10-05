@@ -44,8 +44,8 @@ fun CartItemRow(
             }
         }
 
-        val previewImage = remember(cartItem.product.imageUrls) {
-            cartItem.product.imageUrls.firstOrNull()
+        val previewImage = remember(cartItem.product.imageUrls, cartItem.product.imagePath) {
+            cartItem.product.imageUrls.firstOrNull() ?: cartItem.product.imagePath
         }
 
         AsyncImage(

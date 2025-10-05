@@ -3,8 +3,6 @@ package com.shop.app.ui.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -32,23 +30,10 @@ fun CartScreen(
     onRemoveClick: (String) -> Unit,
     onIncrement: (String) -> Unit,
     onDecrement: (String) -> Unit,
-    onPlaceOrder: () -> Unit,
-    isPlacingOrder: Boolean,
-    orderError: String?,
 ) {
     if (cartItems.isEmpty()) {
         Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = "Cart is empty")
-                if (orderError != null) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = orderError,
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-            }
+            Text(text = "Cart is empty")
         }
     } else {
         // Configure Ukrainian locale for currency formatting
@@ -81,30 +66,11 @@ fun CartScreen(
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Button(
-                    onClick = onPlaceOrder,
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = !isPlacingOrder
-                ) {
-                    if (isPlacingOrder) {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .size(18.dp),
-                            strokeWidth = 2.dp,
-                            color = MaterialTheme.colorScheme.onPrimary
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                    }
-                    Text(if (isPlacingOrder) "Placing order..." else "Place Order")
-                }
-                if (orderError != null) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = orderError,
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
+                Text(
+                    text = "Оформление заказов доступно в следующей версии приложения",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
     }
@@ -136,10 +102,7 @@ fun CartScreenPreview() {
             totalPrice = 2400.0,
             onRemoveClick = {},
             onIncrement = {},
-            onDecrement = {},
-            onPlaceOrder = {},
-            isPlacingOrder = false,
-            orderError = null
+            onDecrement = {}
         )
     }
 }

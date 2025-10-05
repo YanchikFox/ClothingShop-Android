@@ -2,9 +2,6 @@ package com.shop.app.data.repository
 
 import com.shop.app.data.model.AddToCartRequest
 import com.shop.app.data.model.CartItem
-import com.shop.app.data.model.OrderItemRequest
-import com.shop.app.data.model.OrderResponse
-import com.shop.app.data.model.PlaceOrderRequest
 import com.shop.app.data.model.Product
 import com.shop.app.data.model.UpdateCartRequest
 import com.shop.app.data.network.ApiService
@@ -29,11 +26,15 @@ class CartRepository {
                 price = responseItem.price,
                 priceString = responseItem.priceString,
                 isBestseller = responseItem.isBestseller,
-                imageUrls = responseItem.imageUrls,
+                imageUrls = responseItem.imageUrls.ifEmpty {
+                    responseItem.imagePath?.let { listOf(it) } ?: emptyList()
+                },
+                imagePath = responseItem.imagePath,
                 composition = responseItem.composition,
                 careInstructions = responseItem.careInstructions,
                 features = responseItem.features,
-                reviews = responseItem.reviews
+                reviews = responseItem.reviews,
+                gender = responseItem.gender
             )
             // Create CartItem
             CartItem(product = product, quantity = responseItem.quantity)
@@ -52,18 +53,5 @@ class CartRepository {
 
     suspend fun removeCartItem(token: String, productId: String) {
         apiService.removeCartItem(token, productId)
-    }
-
-    suspend fun placeOrder(token: String, cartItems: List<CartItem>): OrderResponse {
-        val request = PlaceOrderRequest(
-            items = cartItems.map { cartItem ->
-                OrderItemRequest(
-                    productId = cartItem.product.id,
-                    quantity = cartItem.quantity
-                )
-            }
-        )
-
-        return apiService.placeOrder(token, request)
     }
 }

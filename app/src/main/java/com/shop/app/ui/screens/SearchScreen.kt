@@ -38,8 +38,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardActions
-import androidx.compose.ui.text.input.KeyboardOptions
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.shop.app.ui.components.ProductCard
@@ -236,7 +236,10 @@ private fun FiltersSection(
 
         Text("Категория", style = MaterialTheme.typography.labelLarge)
         Spacer(modifier = Modifier.height(8.dp))
-        FlowRow(mainAxisSpacing = 8.dp, crossAxisSpacing = 8.dp) {
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             categoryFilterOptions.forEach { option ->
                 val isSelected = option.id?.let { filters.categoryId == it } ?: (filters.categoryId == null)
                 FilterChip(
@@ -257,7 +260,10 @@ private fun FiltersSection(
         Spacer(modifier = Modifier.height(16.dp))
         Text("Цена", style = MaterialTheme.typography.labelLarge)
         Spacer(modifier = Modifier.height(8.dp))
-        FlowRow(mainAxisSpacing = 8.dp, crossAxisSpacing = 8.dp) {
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             priceFilterOptions.forEach { option ->
                 val isSelected = option.min == filters.minPrice && option.max == filters.maxPrice
                 FilterChip(
@@ -277,7 +283,10 @@ private fun FiltersSection(
         Spacer(modifier = Modifier.height(16.dp))
         Text("Размер", style = MaterialTheme.typography.labelLarge)
         Spacer(modifier = Modifier.height(8.dp))
-        FlowRow(mainAxisSpacing = 8.dp, crossAxisSpacing = 8.dp) {
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             sizeFilterOptions.forEach { option ->
                 val isSelected = option.id?.let { filters.size == it } ?: (filters.size == null)
                 FilterChip(
@@ -298,7 +307,10 @@ private fun FiltersSection(
         Spacer(modifier = Modifier.height(16.dp))
         Text("Сортировка", style = MaterialTheme.typography.labelLarge)
         Spacer(modifier = Modifier.height(8.dp))
-        FlowRow(mainAxisSpacing = 8.dp, crossAxisSpacing = 8.dp) {
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             SearchSortOption.values().forEach { option ->
                 val isSelected = filters.sortOption == option
                 FilterChip(
@@ -344,7 +356,10 @@ private fun SuggestionsSection(
             }
 
             Spacer(modifier = Modifier.height(8.dp))
-            FlowRow(mainAxisSpacing = 8.dp, crossAxisSpacing = 8.dp) {
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 history.forEach { term ->
                     SuggestionChip(
                         onClick = { onSuggestionClick(term) },
@@ -361,7 +376,10 @@ private fun SuggestionsSection(
         if (popularQueries.isNotEmpty()) {
             Text("Популярно сейчас", style = MaterialTheme.typography.labelLarge)
             Spacer(modifier = Modifier.height(8.dp))
-            FlowRow(mainAxisSpacing = 8.dp, crossAxisSpacing = 8.dp) {
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 popularQueries.forEach { term ->
                     SuggestionChip(
                         onClick = { onSuggestionClick(term) },

@@ -23,14 +23,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.shop.app.data.model.ProfileUpdateRequest
-import com.shop.app.data.model.UpdateAddressRequest
-import androidx.navigation.navArgument
 import com.shop.app.ui.screens.*
 import com.shop.app.ui.theme.TShopAppTheme
 import com.shop.app.ui.viewmodels.*
@@ -59,9 +55,6 @@ fun AppNavigation() {
     val isLoggedIn by authViewModel.isLoggedIn.collectAsStateWithLifecycle()
     val userProfile by authViewModel.userProfile.collectAsStateWithLifecycle()
     val totalPrice by cartViewModel.totalPrice.collectAsStateWithLifecycle()
-    val isPlacingOrder by cartViewModel.isPlacingOrder.collectAsStateWithLifecycle()
-    val orderError by cartViewModel.orderError.collectAsStateWithLifecycle()
-
     val context = LocalContext.current
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -161,29 +154,7 @@ fun AppNavigation() {
                         totalPrice = totalPrice,
                         onRemoveClick = { productId -> cartViewModel.removeFromCart(productId) },
                         onIncrement = { productId -> cartViewModel.incrementQuantity(productId) },
-                        onDecrement = { productId -> cartViewModel.decrementQuantity(productId) },
-                        onPlaceOrder = { cartViewModel.placeOrder() },
-                        isPlacingOrder = isPlacingOrder,
-                        orderError = orderError
-                    )
-                }
-
-                composable(
-                    route = "thank_you/{orderId}",
-                    arguments = listOf(navArgument("orderId") { type = NavType.StringType })
-                ) { backStackEntry ->
-                    val orderId = backStackEntry.arguments?.getString("orderId")
-                    ThankYouScreen(
-                        orderId = orderId,
-                        onContinueShopping = {
-                            navController.navigate("home") {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = false
-                                }
-                                launchSingleTop = true
-                                restoreState = false
-                            }
-                        }
+                        onDecrement = { productId -> cartViewModel.decrementQuantity(productId) }
                     )
                 }
 
@@ -192,103 +163,8 @@ fun AppNavigation() {
                         isLoggedIn = isLoggedIn,
                         userProfile = userProfile,
                         onLoginClick = { navController.navigate("login") },
-                        onLogoutClick = { authViewModel.logout() },
-                        onEditProfileClick = { navController.navigate("profile/edit") },
-                        onManageAddressesClick = { navController.navigate("profile/addresses") }
+                        onLogoutClick = { authViewModel.logout() }
                     )
-                }
-
-                composable("profile/edit") {
-                    val profile = userProfile
-                    if (profile != null) {
-                        EditProfileScreen(
-                            profile = profile,
-                            onSave = { name, phone ->
-                                if (name.isBlank() || phone.isBlank()) {
-                                    Toast.makeText(
-                                        context,
-                                        "Укажите имя и телефон",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                } else {
-                                    val request = ProfileUpdateRequest(
-                                        name = name,
-                                        phone = phone,
-                                        addresses = profile.addresses.map {
-                                            UpdateAddressRequest(
-                                                label = it.label,
-                                                line1 = it.line1,
-                                                line2 = it.line2,
-                                                city = it.city,
-                                                postalCode = it.postalCode,
-                                                country = it.country,
-                                                isDefault = it.isDefault
-                                            )
-                                        }
-                                    )
-                                    authViewModel.updateProfile(request) { success ->
-                                        val message = if (success) {
-                                            "Профиль обновлён"
-                                        } else {
-                                            "Не удалось сохранить профиль"
-                                        }
-                                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                                        if (success) {
-                                            navController.popBackStack()
-                                        }
-                                    }
-                                }
-                            },
-                            onBack = { navController.popBackStack() }
-                        )
-                    } else {
-                        LaunchedEffect(Unit) {
-                            navController.popBackStack()
-                        }
-                    }
-                }
-
-                composable("profile/addresses") {
-                    val profile = userProfile
-                    if (profile != null) {
-                        ManageAddressesScreen(
-                            profile = profile,
-                            onSave = { addresses ->
-                                val currentName = profile.name?.takeIf { it.isNotBlank() }
-                                val currentPhone = profile.phone?.takeIf { it.isNotBlank() }
-
-                                if (currentName == null || currentPhone == null) {
-                                    Toast.makeText(
-                                        context,
-                                        "Сначала заполните имя и телефон в профиле",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                } else {
-                                    val request = ProfileUpdateRequest(
-                                        name = currentName,
-                                        phone = currentPhone,
-                                        addresses = addresses
-                                    )
-                                    authViewModel.updateProfile(request) { success ->
-                                        val message = if (success) {
-                                            "Адреса обновлены"
-                                        } else {
-                                            "Не удалось сохранить адреса"
-                                        }
-                                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                                        if (success) {
-                                            navController.popBackStack()
-                                        }
-                                    }
-                                }
-                            },
-                            onBack = { navController.popBackStack() }
-                        )
-                    } else {
-                        LaunchedEffect(Unit) {
-                            navController.popBackStack()
-                        }
-                    }
                 }
 
                 composable("login") {
@@ -341,17 +217,6 @@ fun AppNavigation() {
         }
     }
 
-    LaunchedEffect(Unit) {
-        cartViewModel.orderSuccess.collect { order ->
-            Toast.makeText(context, "Order #${order.id} placed", Toast.LENGTH_SHORT).show()
-            navController.navigate("thank_you/${order.id}") {
-                popUpTo("cart") {
-                    inclusive = true
-                }
-                launchSingleTop = true
-            }
-        }
-    }
 }
 
 @Composable

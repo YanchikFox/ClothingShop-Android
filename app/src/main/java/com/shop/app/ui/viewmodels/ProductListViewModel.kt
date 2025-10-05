@@ -67,7 +67,7 @@ class ProductListViewModel(
         viewModelScope.launch {
             _uiState.value = ProductsUiState.Loading
             try {
-                val products = ServiceLocator.apiService.getProducts(categoryId = categoryId)
+                val products = ServiceLocator.apiService.getProducts(gender = categoryId)
                 _uiState.value = ProductsUiState.Success(products)
             } catch (e: Exception) {
                 e.printStackTrace()

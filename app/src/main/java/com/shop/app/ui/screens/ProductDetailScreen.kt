@@ -8,6 +8,7 @@ import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -46,6 +48,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -84,6 +87,10 @@ fun ProductDetailScreen(
         }
     }
 
+    val galleryImages = remember(product.imageUrls, product.imagePath) {
+        if (product.imageUrls.isNotEmpty()) product.imageUrls else listOfNotNull(product.imagePath)
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -92,7 +99,7 @@ fun ProductDetailScreen(
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         ProductImageGallery(
-            imageUrls = product.imageUrls,
+            imageUrls = galleryImages,
             contentDescription = product.name
         )
 
@@ -303,7 +310,7 @@ private fun ZoomableProductImage(
 @Composable
 private fun DetailSection(
     title: String,
-    content: @Composable Column.() -> Unit
+    content: @Composable ColumnScope.() -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(

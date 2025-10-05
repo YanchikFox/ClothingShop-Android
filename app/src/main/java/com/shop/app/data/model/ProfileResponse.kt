@@ -5,11 +5,11 @@ import com.google.gson.annotations.SerializedName
 data class ProfileResponse(
     val id: Int,
     val email: String,
-    val name: String?,
-    val phone: String?,
+    val name: String? = null,
+    val phone: String? = null,
     @SerializedName("created_at") val createdAt: String,
-    val addresses: List<UserAddress>,
-    @SerializedName("order_history") val orderHistory: List<OrderHistoryItem>
+    val addresses: List<UserAddress> = emptyList(),
+    @SerializedName("order_history") val orderHistory: List<OrderHistoryItem> = emptyList()
 )
 
 data class UserAddress(

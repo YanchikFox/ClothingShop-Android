@@ -4,13 +4,10 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.shop.app.data.model.CartItem
-import com.shop.app.data.model.OrderResponse
 import com.shop.app.data.model.Product
 import com.shop.app.data.repository.CartRepository
 import com.shop.app.data.repository.UserPreferencesRepository
 import kotlinx.coroutines.flow.*
-import org.json.JSONObject
-import retrofit2.HttpException
 import kotlinx.coroutines.launch
 
 class CartViewModel(application: Application) : AndroidViewModel(application) {
@@ -20,15 +17,6 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _cartItems = MutableStateFlow<List<CartItem>>(emptyList())
     val cartItems: StateFlow<List<CartItem>> = _cartItems
-
-    private val _isPlacingOrder = MutableStateFlow(false)
-    val isPlacingOrder: StateFlow<Boolean> = _isPlacingOrder
-
-    private val _orderError = MutableStateFlow<String?>(null)
-    val orderError: StateFlow<String?> = _orderError
-
-    private val _orderSuccess = MutableSharedFlow<OrderResponse>(extraBufferCapacity = 1)
-    val orderSuccess: SharedFlow<OrderResponse> = _orderSuccess
 
     val totalPrice: StateFlow<Double> = _cartItems.map { list ->
         list.sumOf { cartItem ->
@@ -147,60 +135,6 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
                     currentList.filterNot { it.product.id == productId }
                 }
             }
-        }
-    }
-
-    fun placeOrder() {
-        viewModelScope.launch {
-            val token = authTokenFlow.first()
-
-            if (token == null) {
-                _orderError.value = "Please sign in to place an order"
-                return@launch
-            }
-
-            if (_cartItems.value.isEmpty()) {
-                _orderError.value = "Your cart is empty"
-                return@launch
-            }
-
-            _isPlacingOrder.value = true
-            _orderError.value = null
-
-            try {
-                val response = cartRepository.placeOrder(token, _cartItems.value)
-                _cartItems.value = emptyList()
-                _orderSuccess.emit(response)
-            } catch (e: Exception) {
-                _orderError.value = parseOrderErrorMessage(e)
-            } finally {
-                _isPlacingOrder.value = false
-            }
-        }
-    }
-
-    fun clearOrderError() {
-        _orderError.value = null
-    }
-
-    private fun parseOrderErrorMessage(throwable: Throwable): String {
-        return when (throwable) {
-            is HttpException -> {
-                val errorBody = throwable.response()?.errorBody()?.string()
-                if (!errorBody.isNullOrEmpty()) {
-                    try {
-                        val json = JSONObject(errorBody)
-                        val message = json.optJSONObject("error")?.optString("message")
-                        if (!message.isNullOrBlank()) {
-                            return message
-                        }
-                    } catch (_: Exception) {
-                        // Ignore parsing issues and fallback to default message
-                    }
-                }
-                throwable.message()
-            }
-            else -> throwable.message ?: "Failed to place order"
         }
     }
 }

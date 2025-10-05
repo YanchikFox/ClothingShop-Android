@@ -35,7 +35,9 @@ fun ProductCard(
         }
     }
 
-    val mainImagePath = remember(product.imageUrls) { product.imageUrls.firstOrNull() }
+    val mainImagePath = remember(product.imageUrls, product.imagePath) {
+        product.imageUrls.firstOrNull() ?: product.imagePath
+    }
 
     Card(modifier = modifier.clickable(onClick = onClick)) {
         Column {
