@@ -1,14 +1,14 @@
 package com.shop.app.ui.viewmodels
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.shop.app.data.model.AuthRequest
 import com.shop.app.data.model.AuthResponse
 import com.shop.app.data.model.ProfileResponse
 import com.shop.app.data.model.ProfileUpdateRequest
 import com.shop.app.data.repository.AuthRepository
-import com.shop.app.data.repository.UserPreferencesRepository
+import com.shop.app.data.repository.UserRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -26,9 +26,7 @@ sealed interface ProfileUpdateState {
     data class Error(val message: String) : ProfileUpdateState
 }
 
-class AuthViewModel(application: Application) : AndroidViewModel(application) {
-    private val authRepository = AuthRepository()
-    private val userPreferencesRepository = UserPreferencesRepository(application)
+class AuthViewModel(private val userRepository: UserRepository, private val authRepository: AuthRepository) : ViewModel() {
 
     private val _authUiState = MutableStateFlow<AuthUiState>(AuthUiState.Idle)
     val authUiState: StateFlow<AuthUiState> = _authUiState
@@ -39,9 +37,9 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val _profileUpdateState = MutableStateFlow<ProfileUpdateState>(ProfileUpdateState.Idle)
     val profileUpdateState: StateFlow<ProfileUpdateState> = _profileUpdateState
 
-    val isLoggedIn: StateFlow<Boolean> = userPreferencesRepository.authTokenFlow
-        .map { token -> token != null }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+    val isLoggedIn: StateFlow<Boolean> = flow {
+        emit(authRepository.getAuthToken() != null)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     init {
         viewModelScope.launch {
@@ -58,16 +56,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private fun fetchProfile() {
         viewModelScope.launch {
             try {
-                // `first()` is a suspend function that waits for the first value from Flow
-                val token = userPreferencesRepository.authTokenFlow.first()
-                // Token null check is not needed here because we call `fetchProfile`
-                // only when `isLoggedIn` becomes true, which already guarantees token presence.
-                val profile = authRepository.getProfile(token!!) // Use `!!` because we're sure token is not null
+                val profile = userRepository.getProfile()
                 _userProfile.value = profile
             } catch (e: Exception) {
                 e.printStackTrace()
-                // If token exists but profile couldn't be loaded (e.g., token expired),
-                // need to log out the user.
                 logout()
             }
         }
@@ -77,8 +69,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _authUiState.value = AuthUiState.Loading
             try {
-                authRepository.registerUser(AuthRequest(email, password))
-                // Pass Success without data
+                userRepository.registerUser(AuthRequest(email, password))
                 _authUiState.value = AuthUiState.Success(null)
             } catch (e: Exception) {
                 _authUiState.value = AuthUiState.Error(e.message ?: "Registration error")
@@ -90,8 +81,8 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _authUiState.value = AuthUiState.Loading
             try {
-                val response = authRepository.loginUser(AuthRequest(email, password))
-                userPreferencesRepository.saveAuthToken(response.token)
+                val response = userRepository.loginUser(AuthRequest(email, password))
+                authRepository.saveAuthToken(response.token)
                 _authUiState.value = AuthUiState.Success(response)
             } catch (e: Exception) {
                 _authUiState.value = AuthUiState.Error(e.message ?: "Login error")
@@ -101,7 +92,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     fun logout() {
         viewModelScope.launch {
-            userPreferencesRepository.clearAuthToken()
+            authRepository.saveAuthToken("")
             _profileUpdateState.value = ProfileUpdateState.Idle
         }
     }
@@ -114,13 +105,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _profileUpdateState.value = ProfileUpdateState.Loading
             try {
-                val token = userPreferencesRepository.authTokenFlow.first()
-                if (token == null) {
-                    _profileUpdateState.value = ProfileUpdateState.Error("Authentication required")
-                    return@launch
-                }
-
-                val updatedProfile = authRepository.updateProfile(token, request)
+                val updatedProfile = userRepository.updateProfile(request)
                 _userProfile.value = updatedProfile
                 _profileUpdateState.value = ProfileUpdateState.Success
             } catch (e: Exception) {
@@ -132,5 +117,19 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     fun resetProfileUpdateState() {
         _profileUpdateState.value = ProfileUpdateState.Idle
+    }
+
+    companion object {
+        fun provideFactory(userRepository: UserRepository, authRepository: AuthRepository): ViewModelProvider.Factory {
+            return object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    if (modelClass.isAssignableFrom(AuthViewModel::class.java)) {
+                        @Suppress("UNCHECKED_CAST")
+                        return AuthViewModel(userRepository, authRepository) as T
+                    }
+                    throw IllegalArgumentException("Unknown ViewModel class")
+                }
+            }
+        }
     }
 }

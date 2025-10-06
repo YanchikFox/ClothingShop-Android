@@ -1,10 +1,11 @@
 package com.shop.app.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.annotation.StringRes
 import com.shop.app.R
-import com.shop.app.di.ServiceLocator
+import com.shop.app.data.repository.ProductRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -31,7 +32,7 @@ enum class SearchSortOption(@StringRes val labelRes: Int, val sortBy: String?, v
     Name(R.string.search_sort_name, "name", "asc");
 }
 
-class SearchViewModel : ViewModel() {
+class SearchViewModel(private val productRepository: ProductRepository) : ViewModel() {
 
     private val _uiState = MutableStateFlow<ProductsUiState>(ProductsUiState.Success(emptyList()))
     val uiState: StateFlow<ProductsUiState> = _uiState
@@ -130,7 +131,7 @@ class SearchViewModel : ViewModel() {
 
         _uiState.value = ProductsUiState.Loading
         try {
-            val results = ServiceLocator.apiService.searchProducts(
+            val results = productRepository.searchProducts(
                 query = normalizedQuery,
                 gender = filters.categoryId
             )
@@ -146,6 +147,20 @@ class SearchViewModel : ViewModel() {
         _searchHistory.update { history ->
             val deduplicated = history.filterNot { it.equals(query, ignoreCase = true) }
             (listOf(query) + deduplicated).take(10)
+        }
+    }
+
+    companion object {
+        fun provideFactory(productRepository: ProductRepository): ViewModelProvider.Factory {
+            return object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    if (modelClass.isAssignableFrom(SearchViewModel::class.java)) {
+                        @Suppress("UNCHECKED_CAST")
+                        return SearchViewModel(productRepository) as T
+                    }
+                    throw IllegalArgumentException("Unknown ViewModel class")
+                }
+            }
         }
     }
 }

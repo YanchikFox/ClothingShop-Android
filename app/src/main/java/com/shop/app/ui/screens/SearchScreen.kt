@@ -50,6 +50,8 @@ import com.shop.app.ui.viewmodels.SearchFilters
 import com.shop.app.ui.viewmodels.SearchSortOption
 import com.shop.app.ui.viewmodels.SearchViewModel
 import com.shop.app.R
+import com.shop.app.MyApplication
+import androidx.compose.ui.platform.LocalContext
 
 private data class CategoryFilterOption(val id: String?, @StringRes val labelRes: Int)
 private data class PriceFilterOption(
@@ -74,6 +76,7 @@ private val priceFilterOptions = listOf(
     PriceFilterOption("gt2500", R.string.search_filter_price_over_2500, 2500.0, null),
 )
 
+
 private val sizeFilterOptions = listOf(
     SizeFilterOption(null, R.string.search_filter_size_all),
     SizeFilterOption("XS", R.string.size_xs),
@@ -94,9 +97,11 @@ fun SearchScreen(
     modifier: Modifier = Modifier,
     languageTag: String?,
     formatPrice: (Double) -> String,
-    onProductClick: (String) -> Unit,
-    searchViewModel: SearchViewModel = viewModel(),
+    onProductClick: (String) -> Unit
 ) {
+    val application = LocalContext.current.applicationContext as MyApplication
+    val searchViewModel: SearchViewModel = viewModel(factory = SearchViewModel.provideFactory(application.container.productRepository))
+
     val uiState by searchViewModel.uiState.collectAsState()
     val query by searchViewModel.query.collectAsState()
     val filters by searchViewModel.filters.collectAsState()
@@ -205,6 +210,7 @@ fun SearchScreen(
                                 ProductCard(
                                     product = product,
                                     formatPrice = formatPrice,
+                                    imagesBaseUrl = application.container.getImagesBaseUrl(),
                                     onClick = { onProductClick(product.id) }
                                 )
                             }

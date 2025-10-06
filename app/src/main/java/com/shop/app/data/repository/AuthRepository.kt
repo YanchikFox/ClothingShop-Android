@@ -1,29 +1,29 @@
 package com.shop.app.data.repository
 
-import com.shop.app.data.model.AuthRequest
-import com.shop.app.data.model.AuthResponse
-import com.shop.app.data.model.ProfileResponse
-import com.shop.app.data.model.ProfileUpdateRequest
-import com.shop.app.data.network.ApiService
-import com.shop.app.di.ServiceLocator
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.flow.first
 
-class AuthRepository {
-    private val apiService: ApiService = ServiceLocator.apiService
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "auth")
 
-    suspend fun registerUser(authRequest: AuthRequest) {
-        apiService.registerUser(authRequest)
+class AuthRepository(private val context: Context) {
+
+    private object PreferencesKeys {
+        val AUTH_TOKEN = stringPreferencesKey("auth_token")
     }
 
-    suspend fun loginUser(authRequest: AuthRequest): AuthResponse {
-        return apiService.loginUser(authRequest)
+    suspend fun saveAuthToken(token: String) {
+        context.dataStore.edit {
+            it[PreferencesKeys.AUTH_TOKEN] = token
+        }
     }
 
-    suspend fun getProfile(token: String): ProfileResponse {
-        return apiService.getProfile(token)
+    suspend fun getAuthToken(): String? {
+        val preferences = context.dataStore.data.first()
+        return preferences[PreferencesKeys.AUTH_TOKEN]
     }
-
-    suspend fun updateProfile(token: String, request: ProfileUpdateRequest): ProfileResponse {
-        return apiService.updateProfile(token, request)
-    }
-
 }

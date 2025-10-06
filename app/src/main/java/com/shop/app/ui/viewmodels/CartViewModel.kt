@@ -1,19 +1,16 @@
 package com.shop.app.ui.viewmodels
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.shop.app.data.model.CartItem
 import com.shop.app.data.model.Product
+import com.shop.app.data.repository.AuthRepository
 import com.shop.app.data.repository.CartRepository
-import com.shop.app.data.repository.UserPreferencesRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class CartViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val userPreferencesRepository = UserPreferencesRepository(application)
-    private val cartRepository = CartRepository()
+class CartViewModel(private val cartRepository: CartRepository, private val authRepository: AuthRepository) : ViewModel() {
 
     private val _cartItems = MutableStateFlow<List<CartItem>>(emptyList())
     val cartItems: StateFlow<List<CartItem>> = _cartItems
@@ -28,8 +25,7 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
         initialValue = 0.0
     )
 
-    private val isLoggedInFlow = userPreferencesRepository.authTokenFlow.map { it != null }
-    private val authTokenFlow = userPreferencesRepository.authTokenFlow
+    private val isLoggedInFlow = flow { emit(authRepository.getAuthToken() != null) }
 
     init {
         viewModelScope.launch {
@@ -45,13 +41,10 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun fetchCartFromServer() {
         viewModelScope.launch {
-            val token = authTokenFlow.first()
-            if (token != null) {
-                try {
-                    _cartItems.value = cartRepository.getCart(token)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+            try {
+                _cartItems.value = cartRepository.getCart()
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
@@ -67,9 +60,8 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
     fun addToCart(product: Product, quantity: Int = 1) {
         viewModelScope.launch {
             if (isLoggedInFlow.first()) {
-                val token = authTokenFlow.first()!!
                 try {
-                    cartRepository.addToCart(token, product.id, quantity)
+                    cartRepository.addToCart(product.id, quantity)
                     fetchCartFromServer()
                 } catch (e: Exception) { e.printStackTrace() }
             } else {
@@ -89,11 +81,10 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
 
     fun decrementQuantity(productId: String) {
         viewModelScope.launch {
-            val token = authTokenFlow.first()
-            if (token != null) {
+            if (isLoggedInFlow.first()) {
                 val currentItem = _cartItems.value.find { it.product.id == productId }
                 if (currentItem != null && currentItem.quantity > 1) {
-                    cartRepository.updateCartItemQuantity(token, productId, currentItem.quantity - 1)
+                    cartRepository.updateCartItemQuantity(productId, currentItem.quantity - 1)
                     fetchCartFromServer()
                 } else {
                     removeFromCart(productId) // If there's only one item, just remove it
@@ -115,11 +106,10 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
 
     fun incrementQuantity(productId: String) {
         viewModelScope.launch {
-            val token = authTokenFlow.first()
-            if (token != null) {
+            if (isLoggedInFlow.first()) {
                 val currentItem = _cartItems.value.find { it.product.id == productId }
                 if (currentItem != null) {
-                    cartRepository.updateCartItemQuantity(token, productId, currentItem.quantity + 1)
+                    cartRepository.updateCartItemQuantity(productId, currentItem.quantity + 1)
                     fetchCartFromServer()
                 }
             } else {
@@ -134,13 +124,26 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
 
     fun removeFromCart(productId: String) {
         viewModelScope.launch {
-            val token = authTokenFlow.first()
-            if (token != null) {
-                cartRepository.removeCartItem(token, productId)
+            if (isLoggedInFlow.first()) {
+                cartRepository.removeCartItem(productId)
                 fetchCartFromServer()
             } else {
                 _cartItems.update { currentList ->
                     currentList.filterNot { it.product.id == productId }
+                }
+            }
+        }
+    }
+
+    companion object {
+        fun provideFactory(cartRepository: CartRepository, authRepository: AuthRepository): ViewModelProvider.Factory {
+            return object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    if (modelClass.isAssignableFrom(CartViewModel::class.java)) {
+                        @Suppress("UNCHECKED_CAST")
+                        return CartViewModel(cartRepository, authRepository) as T
+                    }
+                    throw IllegalArgumentException("Unknown ViewModel class")
                 }
             }
         }

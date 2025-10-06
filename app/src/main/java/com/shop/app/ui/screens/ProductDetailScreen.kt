@@ -51,7 +51,6 @@ import coil.compose.AsyncImage
 import com.shop.app.data.model.Product
 import com.shop.app.data.model.ProductFeature
 import com.shop.app.data.model.ProductReview
-import com.shop.app.di.ServiceLocator
 import com.shop.app.ui.theme.TShopAppTheme
 import androidx.compose.ui.res.stringResource
 import com.shop.app.R
@@ -63,6 +62,7 @@ fun ProductDetailScreen(
     productId: String?,
     products: List<Product>,
     modifier: Modifier = Modifier,
+    imagesBaseUrl: String,
     formatPrice: (Double) -> String,
     onAddToCartClick: (product: Product, quantity: Int) -> Unit
 ) {
@@ -89,7 +89,8 @@ fun ProductDetailScreen(
     ) {
         ProductImageGallery(
             imageUrls = galleryImages,
-            contentDescription = product.name
+            contentDescription = product.name,
+            imagesBaseUrl = imagesBaseUrl
         )
 
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -176,6 +177,7 @@ fun ProductDetailScreen(
 private fun ProductImageGallery(
     imageUrls: List<String>,
     contentDescription: String,
+    imagesBaseUrl: String,
     modifier: Modifier = Modifier
 ) {
     val pagerState = rememberPagerState(pageCount = { imageUrls.size.coerceAtLeast(1) })
@@ -193,6 +195,7 @@ private fun ProductImageGallery(
             ProductImagePage(
                 imagePath = imagePath,
                 contentDescription = contentDescription,
+                imagesBaseUrl = imagesBaseUrl,
                 modifier = Modifier.fillMaxSize()
             )
         }
@@ -230,6 +233,7 @@ private fun ProductImageGallery(
 private fun ProductImagePage(
     imagePath: String?,
     contentDescription: String,
+    imagesBaseUrl: String,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -241,7 +245,7 @@ private fun ProductImagePage(
     ) {
         if (imagePath != null) {
             AsyncImage(
-                model = ServiceLocator.imagesBaseUrl + imagePath,
+                model = imagesBaseUrl + imagePath,
                 contentDescription = contentDescription,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
@@ -372,6 +376,7 @@ fun ProductDetailScreenPreview() {
             productId = sampleProduct.id,
             products = listOf(sampleProduct),
             formatPrice = { price -> "${price.toInt()} ₴" },
+            imagesBaseUrl = "",
             onAddToCartClick = { _, _ -> }
         )
     }

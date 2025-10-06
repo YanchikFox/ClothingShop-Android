@@ -30,7 +30,6 @@ import com.shop.app.data.model.CartItem
 import com.shop.app.data.model.Product
 import com.shop.app.data.model.ProductFeature
 import com.shop.app.data.model.ProductReview
-import com.shop.app.di.ServiceLocator
 import com.shop.app.ui.theme.TShopAppTheme
 import com.shop.app.R
 
@@ -39,6 +38,7 @@ fun CartItemRow(
     cartItem: CartItem,
     modifier: Modifier = Modifier,
     formatPrice: (Double) -> String,
+    imagesBaseUrl: String,
     onRemoveClick: () -> Unit,
     onIncrement: () -> Unit,
     onDecrement: () -> Unit
@@ -55,7 +55,7 @@ fun CartItemRow(
 
         AsyncImage(
             // Use first image and build full URL
-            model = previewImage?.let { ServiceLocator.imagesBaseUrl + it },
+            model = previewImage?.let { imagesBaseUrl + it },
             contentDescription = cartItem.product.name,
             modifier = Modifier
                 .size(80.dp),
@@ -124,6 +124,7 @@ fun CartItemRowPreview() {
         CartItemRow(
             cartItem = sampleCartItem,
             formatPrice = { price -> "${price.toInt()} ₴" },
+            imagesBaseUrl = "",
             onRemoveClick = {},
             onIncrement = {},
             onDecrement = {}

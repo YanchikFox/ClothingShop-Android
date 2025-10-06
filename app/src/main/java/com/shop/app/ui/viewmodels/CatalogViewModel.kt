@@ -1,6 +1,7 @@
 package com.shop.app.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.shop.app.data.model.Category
 import com.shop.app.data.repository.CatalogRepository
@@ -15,9 +16,7 @@ sealed interface CatalogUiState {
     data object Loading : CatalogUiState
 }
 
-class CatalogViewModel : ViewModel() {
-    private val repository = CatalogRepository()
-
+class CatalogViewModel(private val repository: CatalogRepository) : ViewModel() {
     // StateFlow for storing UI state
     private val _uiState = MutableStateFlow<CatalogUiState>(CatalogUiState.Loading)
     val uiState: StateFlow<CatalogUiState> = _uiState
@@ -43,5 +42,19 @@ class CatalogViewModel : ViewModel() {
 
     fun refreshCategories() {
         fetchCategories()
+    }
+
+    companion object {
+        fun provideFactory(repository: CatalogRepository): ViewModelProvider.Factory {
+            return object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    if (modelClass.isAssignableFrom(CatalogViewModel::class.java)) {
+                        @Suppress("UNCHECKED_CAST")
+                        return CatalogViewModel(repository) as T
+                    }
+                    throw IllegalArgumentException("Unknown ViewModel class")
+                }
+            }
+        }
     }
 }

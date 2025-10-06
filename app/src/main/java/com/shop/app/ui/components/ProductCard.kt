@@ -16,7 +16,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.shop.app.BuildConfig
 import com.shop.app.data.model.Product
 import com.shop.app.data.model.ProductFeature
 import com.shop.app.data.model.ProductReview
@@ -26,6 +25,7 @@ import com.shop.app.R
 fun ProductCard(
     product: Product,
     formatPrice: (Double) -> String,
+    imagesBaseUrl: String,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
@@ -39,7 +39,7 @@ fun ProductCard(
             Box {
                 AsyncImage(
                     // Build full URL for image
-                    model = mainImagePath?.let { BuildConfig.IMAGES_BASE_URL + it },
+                    model = mainImagePath?.let { imagesBaseUrl + it },
                     contentDescription = product.name,
                     modifier = Modifier.fillMaxWidth().aspectRatio(0.8f),
                     contentScale = ContentScale.Crop
@@ -107,6 +107,7 @@ fun ProductCardPreview() {
     ProductCard(
         product = sampleProduct,
         formatPrice = { price -> "${price.toInt()} ₴" },
+        imagesBaseUrl = "",
         modifier = Modifier.width(200.dp),
         onClick = {}
     )

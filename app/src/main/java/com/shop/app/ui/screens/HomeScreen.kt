@@ -18,6 +18,8 @@ import com.shop.app.ui.components.SearchBar
 import com.shop.app.ui.components.SectionTitle
 import com.shop.app.ui.viewmodels.ProductsUiState
 import com.shop.app.R
+import com.shop.app.MyApplication
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun HomeScreen(
@@ -27,6 +29,8 @@ fun HomeScreen(
     onProductClick: (String) -> Unit,
     onSearchClick: () -> Unit // This parameter is received from MainActivity
 ) {
+    val application = LocalContext.current.applicationContext as MyApplication
+
     LazyColumn(modifier = modifier.fillMaxSize()) {
         item {
             // Pass the received onSearchClick action to our SearchBar
@@ -51,6 +55,7 @@ fun HomeScreen(
                     ProductRow(
                         products = state.products,
                         formatPrice = formatPrice,
+                        imagesBaseUrl = application.container.getImagesBaseUrl(),
                         onProductClick = onProductClick
                     )
                 }
@@ -61,6 +66,7 @@ fun HomeScreen(
                     ProductRow(
                         products = state.products.shuffled(),
                         formatPrice = formatPrice,
+                        imagesBaseUrl = application.container.getImagesBaseUrl(),
                         onProductClick = onProductClick
                     )
                 }

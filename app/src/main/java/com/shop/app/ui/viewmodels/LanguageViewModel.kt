@@ -1,6 +1,5 @@
 package com.shop.app.ui.viewmodels
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
@@ -69,13 +68,12 @@ class LanguageViewModel(private val repository: LanguageRepository) : ViewModel(
             LanguageOption("uk", R.string.language_ukrainian)
         )
 
-        fun provideFactory(context: Context): ViewModelProvider.Factory {
-            val appContext = context.applicationContext
+        fun provideFactory(repository: LanguageRepository): ViewModelProvider.Factory {
             return object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     if (modelClass.isAssignableFrom(LanguageViewModel::class.java)) {
                         @Suppress("UNCHECKED_CAST")
-                        return LanguageViewModel(LanguageRepository(appContext)) as T
+                        return LanguageViewModel(repository) as T
                     }
                     throw IllegalArgumentException("Unknown ViewModel class")
                 }

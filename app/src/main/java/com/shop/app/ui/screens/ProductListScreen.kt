@@ -28,12 +28,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.shop.app.di.ServiceLocator
 import com.shop.app.ui.components.ProductCard
 import com.shop.app.ui.viewmodels.ProductListViewModel
 import com.shop.app.ui.viewmodels.ProductsUiState
 import androidx.compose.ui.res.stringResource
 import com.shop.app.R
+import com.shop.app.MyApplication
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.SavedStateHandle
 
 @Composable
 fun ProductListScreen(
@@ -41,8 +43,16 @@ fun ProductListScreen(
     languageTag: String?,
     formatPrice: (Double) -> String,
     onProductClick: (String) -> Unit,
-    productListViewModel: ProductListViewModel = viewModel()
 ) {
+    val application = LocalContext.current.applicationContext as MyApplication
+    val productListViewModel: ProductListViewModel = viewModel(
+        factory = ProductListViewModel.provideFactory(
+            catalogRepository = application.container.catalogRepository,
+            productRepository = application.container.productRepository,
+            savedStateHandle = SavedStateHandle()
+        )
+    )
+
     val uiState by productListViewModel.uiState.collectAsState()
     val filters by productListViewModel.filters.collectAsState()
     val selectedCategoryId by productListViewModel.selectedCategoryId.collectAsState()
@@ -81,7 +91,7 @@ fun ProductListScreen(
                                 label = { Text(category.name) },
                                 leadingIcon = {
                                     AsyncImage(
-                                        model = ServiceLocator.imagesBaseUrl + category.iconPath,
+                                        model = application.container.getImagesBaseUrl() + category.iconPath,
                                         contentDescription = category.name,
                                         modifier = Modifier.size(24.dp),
                                         contentScale = ContentScale.Fit
@@ -115,6 +125,7 @@ fun ProductListScreen(
                             ProductCard(
                                 product = product,
                                 formatPrice = formatPrice,
+                                imagesBaseUrl = application.container.getImagesBaseUrl(),
                                 onClick = { onProductClick(product.id) }
                             )
                         }

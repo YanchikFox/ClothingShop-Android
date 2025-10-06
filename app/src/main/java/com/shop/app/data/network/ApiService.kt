@@ -12,7 +12,6 @@ import com.shop.app.data.model.UpdateCartRequest
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -20,53 +19,43 @@ import retrofit2.http.Query
 
 interface ApiService {
     // Products and Categories
-    @GET("api/products")
+    @GET("products")
     suspend fun getProducts(@Query("gender") gender: String? = null): List<Product>
 
-    @GET("api/categories")
+    @GET("categories")
     suspend fun getCategories(): List<Category>
 
     // Authentication
-    @POST("api/register")
+    @POST("register")
     suspend fun registerUser(@Body request: AuthRequest)
 
-    @POST("api/login")
+    @POST("login")
     suspend fun loginUser(@Body request: AuthRequest): AuthResponse
 
-    @GET("api/profile")
-    suspend fun getProfile(@Header("x-auth-token") token: String): ProfileResponse
+    @GET("profile")
+    suspend fun getProfile(): ProfileResponse
 
-    @PUT("api/profile")
-    suspend fun updateProfile(
-        @Header("x-auth-token") token: String,
-        @Body request: ProfileUpdateRequest
-    ): ProfileResponse
+    @PUT("profile")
+    suspend fun updateProfile(@Body request: ProfileUpdateRequest): ProfileResponse
 
     // Get user's cart
-    @GET("api/cart")
-    suspend fun getCart(@Header("x-auth-token") token: String): List<CartItemResponse> // Expect new type
+    @GET("cart")
+    suspend fun getCart(): List<CartItemResponse> // Expect new type
 
-    @PUT("api/cart/item/{productId}")
+    @PUT("cart/item/{productId}")
     suspend fun updateCartItemQuantity(
-        @Header("x-auth-token") token: String,
         @Path("productId") productId: String,
         @Body request: UpdateCartRequest
     )
 
-    @DELETE("api/cart/item/{productId}")
-    suspend fun removeCartItem(
-        @Header("x-auth-token") token: String,
-        @Path("productId") productId: String
-    )
+    @DELETE("cart/item/{productId}")
+    suspend fun removeCartItem(@Path("productId") productId: String)
 
     // Add product to cart
-    @POST("api/cart")
-    suspend fun addToCart(
-        @Header("x-auth-token") token: String,
-        @Body request: AddToCartRequest
-    )
+    @POST("cart")
+    suspend fun addToCart(@Body request: AddToCartRequest)
 
-    @GET("api/search")
+    @GET("search")
     suspend fun searchProducts(
         @Query("q") query: String? = null,
         @Query("gender") gender: String? = null,

@@ -18,14 +18,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.shop.app.data.model.Category
-import com.shop.app.di.ServiceLocator
 import com.shop.app.localization.rememberCurrentLocale
-import com.shop.app.localization.currentLocale
 
 @Composable
 fun CategoryCard(
     category: Category,
     modifier: Modifier = Modifier,
+    imagesBaseUrl: String,
     onClick: () -> Unit
 ) {
     Card(
@@ -34,7 +33,7 @@ fun CategoryCard(
         Box(contentAlignment = Alignment.Center) {
             // Background image
             AsyncImage(
-                model = ServiceLocator.imagesBaseUrl + category.imagePath,
+                model = imagesBaseUrl + category.imagePath,
                 contentDescription = category.name,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop

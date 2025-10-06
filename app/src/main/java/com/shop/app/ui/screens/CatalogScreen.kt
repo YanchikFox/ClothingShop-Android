@@ -17,19 +17,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.shop.app.data.model.Category
-import com.shop.app.di.ServiceLocator
 import com.shop.app.ui.components.CategoryCard
 import com.shop.app.ui.viewmodels.CatalogUiState
 import com.shop.app.ui.viewmodels.CatalogViewModel
@@ -43,19 +38,10 @@ import com.shop.app.R
 @Composable
 fun CatalogScreen(
     modifier: Modifier = Modifier,
-    languageTag: String?,
+    catalogViewModel: CatalogViewModel,
     onCategoryClick: (String) -> Unit,
-    catalogViewModel: CatalogViewModel = viewModel() // Get ViewModel instance
+    imagesBaseUrl: String,
 ) {
-    val skipFirstRefresh = remember { mutableStateOf(true) }
-    LaunchedEffect(languageTag) {
-        if (skipFirstRefresh.value) {
-            skipFirstRefresh.value = false
-        } else {
-            catalogViewModel.refreshCategories()
-        }
-    }
-
     // Subscribe to UI state changes
     val uiState by catalogViewModel.uiState.collectAsState()
 
@@ -85,6 +71,7 @@ fun CatalogScreen(
                         CategoryCard(
                             category = category,
                             modifier = Modifier.fillMaxWidth().height(180.dp),
+                            imagesBaseUrl = imagesBaseUrl,
                             onClick = { onCategoryClick(category.id) }
                         )
 
@@ -97,7 +84,8 @@ fun CatalogScreen(
                                 items(children) { child ->
                                     SubcategoryChip(
                                         category = child,
-                                        onClick = { onCategoryClick(child.id) }
+                                        onClick = { onCategoryClick(child.id) },
+                                        imagesBaseUrl = imagesBaseUrl
                                     )
                                 }
                             }
@@ -117,7 +105,8 @@ fun CatalogScreen(
 @Composable
 private fun SubcategoryChip(
     category: Category,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    imagesBaseUrl: String
 ) {
     Surface(
         shape = CircleShape,
@@ -131,7 +120,7 @@ private fun SubcategoryChip(
             verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
-                model = ServiceLocator.imagesBaseUrl + category.iconPath,
+                model = imagesBaseUrl + category.iconPath,
                 contentDescription = category.name,
                 modifier = Modifier.size(24.dp),
                 contentScale = ContentScale.Fit

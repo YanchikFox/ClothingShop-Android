@@ -21,9 +21,9 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "API_BASE_URL", "\"http://192.168.119.1:3000/\"")
+            buildConfigField("String", "API_BASE_URL", "\"http://192.168.119.1:3000/api/\"")
             buildConfigField("String", "IMAGES_BASE_URL", "\"http://192.168.119.1:3000/\"")
-            resValue("string", "api_base_url", "http://192.168.119.1:3000/")
+            resValue("string", "api_base_url", "http://192.168.119.1:3000/api/")
             resValue("string", "images_base_url", "http://192.168.119.1:3000/")
         }
         release {
@@ -32,9 +32,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "API_BASE_URL", "\"http://192.168.119.1:3000/\"")
+            buildConfigField("String", "API_BASE_URL", "\"http://192.168.119.1:3000/api/\"")
             buildConfigField("String", "IMAGES_BASE_URL", "\"http://192.168.119.1:3000/\"")
-            resValue("string", "api_base_url", "http://192.168.119.1:3000/")
+            resValue("string", "api_base_url", "http://192.168.119.1:3000/api/")
             resValue("string", "images_base_url", "http://192.168.119.1:3000/")
         }
     }

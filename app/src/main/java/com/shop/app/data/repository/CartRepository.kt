@@ -5,14 +5,12 @@ import com.shop.app.data.model.CartItem
 import com.shop.app.data.model.Product
 import com.shop.app.data.model.UpdateCartRequest
 import com.shop.app.data.network.ApiService
-import com.shop.app.di.ServiceLocator
 
-class CartRepository {
-    private val apiService: ApiService = ServiceLocator.apiService
+class CartRepository(private val apiService: ApiService) {
 
-    suspend fun getCart(token: String): List<CartItem> {
+    suspend fun getCart(): List<CartItem> {
         // Get "flat" response from server
-        val responseItems = apiService.getCart(token)
+        val responseItems = apiService.getCart()
 
         // Transform it into the List<CartItem> structure we need
         return responseItems.map { responseItem ->
@@ -41,17 +39,17 @@ class CartRepository {
         }
     }
 
-    suspend fun addToCart(token: String, productId: String, quantity: Int) {
+    suspend fun addToCart(productId: String, quantity: Int) {
         val request = AddToCartRequest(productId = productId, quantity = quantity)
-        apiService.addToCart(token, request)
+        apiService.addToCart(request)
     }
 
-    suspend fun updateCartItemQuantity(token: String, productId: String, quantity: Int) {
+    suspend fun updateCartItemQuantity(productId: String, quantity: Int) {
         val request = UpdateCartRequest(quantity = quantity)
-        apiService.updateCartItemQuantity(token, productId, request)
+        apiService.updateCartItemQuantity(productId, request)
     }
 
-    suspend fun removeCartItem(token: String, productId: String) {
-        apiService.removeCartItem(token, productId)
+    suspend fun removeCartItem(productId: String) {
+        apiService.removeCartItem(productId)
     }
 }

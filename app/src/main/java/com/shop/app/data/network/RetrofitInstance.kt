@@ -1,27 +1,40 @@
 package com.shop.app.data.network
 
-import com.shop.app.localization.LanguageTagProvider
+import com.shop.app.data.repository.AuthRepository
+import com.shop.app.localization.LanguageRepository
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitInstance(
     private val networkConfig: NetworkConfig,
-    private val languageTagProvider: LanguageTagProvider? = null,
+    private val languageRepository: LanguageRepository,
+    private val authRepository: AuthRepository
 ) {
 
     private val okHttpClient: OkHttpClient by lazy {
-        val builder = OkHttpClient.Builder()
-        languageTagProvider?.let { provider ->
-            builder.addInterceptor { chain ->
-                val requestBuilder = chain.request().newBuilder()
-                provider.currentLanguageTag()?.takeIf { it.isNotBlank() }?.let { tag ->
-                    requestBuilder.header("Accept-Language", tag)
+        OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                runBlocking {
+                    val languageTag = languageRepository.languageFlow.first()
+                    val token = authRepository.getAuthToken()
+
+                    val requestBuilder = chain.request().newBuilder()
+
+                    if (!languageTag.isNullOrBlank()) {
+                        requestBuilder.header("Accept-Language", languageTag)
+                    }
+
+                    token?.let {
+                        requestBuilder.header("x-auth-token", it)
+                    }
+
+                    chain.proceed(requestBuilder.build())
                 }
-                chain.proceed(requestBuilder.build())
             }
-        }
-        builder.build()
+            .build()
     }
 
     private val retrofit: Retrofit by lazy {

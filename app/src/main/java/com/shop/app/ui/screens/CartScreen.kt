@@ -27,6 +27,7 @@ fun CartScreen(
     totalPrice: Double,
     modifier: Modifier = Modifier,
     formatPrice: (Double) -> String,
+    imagesBaseUrl: String,
     onRemoveClick: (String) -> Unit,
     onIncrement: (String) -> Unit,
     onDecrement: (String) -> Unit,
@@ -45,6 +46,7 @@ fun CartScreen(
                     CartItemRow(
                         cartItem = cartItem,
                         formatPrice = formatPrice,
+                        imagesBaseUrl = imagesBaseUrl,
                         onRemoveClick = { onRemoveClick(cartItem.product.id) },
                         onIncrement = { onIncrement(cartItem.product.id) },
                         onDecrement = { onDecrement(cartItem.product.id) }
@@ -98,6 +100,7 @@ fun CartScreenPreview() {
             cartItems = sampleCartItems,
             totalPrice = 2400.0,
             formatPrice = { price -> "${price.toInt()} ₴" },
+            imagesBaseUrl = "",
             onRemoveClick = {},
             onIncrement = {},
             onDecrement = {}
