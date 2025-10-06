@@ -27,14 +27,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.shop.app.R
+import com.shop.app.ui.viewmodels.CurrencyOption
+import com.shop.app.ui.viewmodels.CurrencyUiState
 import com.shop.app.ui.viewmodels.LanguageOption
 import com.shop.app.ui.viewmodels.LanguageUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    uiState: LanguageUiState,
+    languageUiState: LanguageUiState,
+    currencyUiState: CurrencyUiState,
     onLanguageSelected: (LanguageOption) -> Unit,
+    onCurrencySelected: (CurrencyOption) -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -74,8 +78,8 @@ fun SettingsScreen(
                 }
             }
 
-            items(uiState.options) { option ->
-                val isSelected = option.languageTag == uiState.selectedLanguageTag
+            items(languageUiState.options) { option ->
+                val isSelected = option.languageTag == languageUiState.selectedLanguageTag
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -86,6 +90,41 @@ fun SettingsScreen(
                     RadioButton(
                         selected = isSelected,
                         onClick = { onLanguageSelected(option) }
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = stringResource(id = option.labelRes),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+            }
+
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = stringResource(R.string.settings_currency_title),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        text = stringResource(R.string.settings_currency_description),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            items(currencyUiState.options) { option ->
+                val isSelected = option.code == currencyUiState.selectedCurrencyCode
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onCurrencySelected(option) }
+                        .padding(horizontal = 12.dp, vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = isSelected,
+                        onClick = { onCurrencySelected(option) }
                     )
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(

@@ -44,6 +44,11 @@
     <string name="language_english">English</string>
     <string name="language_russian">Русский</string>
     <string name="language_ukrainian">Українська</string>
+    <string name="settings_currency_title">Currency</string>
+    <string name="settings_currency_description">Choose the currency used for prices.</string>
+    <string name="currency_uah">Ukrainian hryvnia (UAH)</string>
+    <string name="currency_usd">US dollar (USD)</string>
+    <string name="currency_eur">Euro (EUR)</string>
 
     <!-- Search -->
     <string name="search_products_hint">Search products</string>

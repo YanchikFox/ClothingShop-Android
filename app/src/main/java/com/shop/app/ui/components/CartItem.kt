@@ -32,14 +32,13 @@ import com.shop.app.data.model.ProductFeature
 import com.shop.app.data.model.ProductReview
 import com.shop.app.di.ServiceLocator
 import com.shop.app.ui.theme.TShopAppTheme
-import java.text.NumberFormat
-import java.util.Locale
 import com.shop.app.R
 
 @Composable
 fun CartItemRow(
     cartItem: CartItem,
     modifier: Modifier = Modifier,
+    formatPrice: (Double) -> String,
     onRemoveClick: () -> Unit,
     onIncrement: () -> Unit,
     onDecrement: () -> Unit
@@ -50,12 +49,6 @@ fun CartItemRow(
             .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        val currencyFormat = remember {
-            NumberFormat.getCurrencyInstance(Locale.getDefault()).apply {
-                maximumFractionDigits = 0
-            }
-        }
-
         val previewImage = remember(cartItem.product.imageUrls, cartItem.product.imagePath) {
             cartItem.product.imageUrls.firstOrNull() ?: cartItem.product.imagePath
         }
@@ -77,7 +70,7 @@ fun CartItemRow(
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
-                text = currencyFormat.format(cartItem.product.price),
+                text = formatPrice(cartItem.product.price),
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -130,6 +123,7 @@ fun CartItemRowPreview() {
     TShopAppTheme {
         CartItemRow(
             cartItem = sampleCartItem,
+            formatPrice = { price -> "${price.toInt()} ₴" },
             onRemoveClick = {},
             onIncrement = {},
             onDecrement = {}

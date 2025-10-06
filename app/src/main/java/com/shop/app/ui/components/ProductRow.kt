@@ -32,6 +32,7 @@ fun ProductRow(
     products: List<Product>,
     // Now onProductClick expects String ID
     onProductClick: (String) -> Unit,
+    formatPrice: (Double) -> String,
     modifier: Modifier = Modifier
 ) {
     LazyRow(
@@ -42,6 +43,7 @@ fun ProductRow(
         items(products) { product ->
             ProductCard(
                 product = product,
+                formatPrice = formatPrice,
                 onClick = { onProductClick(product.id) },
                 modifier = Modifier.width(160.dp)
             )

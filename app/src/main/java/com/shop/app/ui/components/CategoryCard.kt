@@ -8,15 +8,19 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.shop.app.data.model.Category
 import com.shop.app.di.ServiceLocator
+import com.shop.app.localization.rememberCurrentLocale
+import com.shop.app.localization.currentLocale
 
 @Composable
 fun CategoryCard(
@@ -38,8 +42,12 @@ fun CategoryCard(
             // Darkening overlay for better text readability
             Box(modifier = Modifier.fillMaxSize())
             // Centered text
+            val locale = rememberCurrentLocale()
+            val uppercaseName = remember(category.name, locale) {
+                category.name.uppercase(locale)
+            }
             Text(
-                text = category.name.uppercase(), // Make text uppercase
+                text = uppercaseName,
                 style = MaterialTheme.typography.headlineSmall,
                 color = Color.White,
                 fontWeight = FontWeight.Bold

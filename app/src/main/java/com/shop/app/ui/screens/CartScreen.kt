@@ -7,7 +7,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -21,14 +20,13 @@ import com.shop.app.data.model.ProductReview
 import com.shop.app.ui.components.CartItemRow
 import com.shop.app.ui.theme.TShopAppTheme
 import com.shop.app.R
-import java.text.NumberFormat
-import java.util.Locale
 
 @Composable
 fun CartScreen(
     cartItems: List<CartItem>,
     totalPrice: Double,
     modifier: Modifier = Modifier,
+    formatPrice: (Double) -> String,
     onRemoveClick: (String) -> Unit,
     onIncrement: (String) -> Unit,
     onDecrement: (String) -> Unit,
@@ -38,12 +36,6 @@ fun CartScreen(
             Text(text = stringResource(R.string.cart_empty_message))
         }
     } else {
-        val currencyFormat = remember {
-            NumberFormat.getCurrencyInstance(Locale.getDefault()).apply {
-                maximumFractionDigits = 0
-            }
-        }
-
         Column(modifier = modifier.fillMaxSize()) {
             LazyColumn(
                 modifier = Modifier.weight(1f),
@@ -52,6 +44,7 @@ fun CartScreen(
                 items(cartItems) { cartItem ->
                     CartItemRow(
                         cartItem = cartItem,
+                        formatPrice = formatPrice,
                         onRemoveClick = { onRemoveClick(cartItem.product.id) },
                         onIncrement = { onIncrement(cartItem.product.id) },
                         onDecrement = { onDecrement(cartItem.product.id) }
@@ -64,7 +57,7 @@ fun CartScreen(
                 Text(
                     text = stringResource(
                         R.string.cart_total_amount,
-                        currencyFormat.format(totalPrice)
+                        formatPrice(totalPrice)
                     ),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
@@ -104,6 +97,7 @@ fun CartScreenPreview() {
         CartScreen(
             cartItems = sampleCartItems,
             totalPrice = 2400.0,
+            formatPrice = { price -> "${price.toInt()} ₴" },
             onRemoveClick = {},
             onIncrement = {},
             onDecrement = {}

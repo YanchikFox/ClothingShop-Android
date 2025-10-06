@@ -39,6 +39,7 @@ import com.shop.app.R
 fun ProductListScreen(
     modifier: Modifier = Modifier,
     languageTag: String?,
+    formatPrice: (Double) -> String,
     onProductClick: (String) -> Unit,
     productListViewModel: ProductListViewModel = viewModel()
 ) {
@@ -113,6 +114,7 @@ fun ProductListScreen(
                         items(state.products) { product ->
                             ProductCard(
                                 product = product,
+                                formatPrice = formatPrice,
                                 onClick = { onProductClick(product.id) }
                             )
                         }

@@ -19,7 +19,7 @@
     <string name="profile_email_format">Email: %1$s</string>
     <string name="profile_phone_format">Телефон: %1$s</string>
     <string name="profile_phone_unknown">не указан</string>
-    <string name="profile_member_since">С нами с: %1$s</string>
+    <string name="profile_member_since">В команде с %1$s</string>
     <string name="profile_addresses_title">Адреса доставки</string>
     <string name="profile_addresses_empty">Вы ещё не добавили адреса</string>
     <string name="profile_address_city_country">%1$s, %2$s</string>
@@ -44,6 +44,11 @@
     <string name="language_english">English</string>
     <string name="language_russian">Русский</string>
     <string name="language_ukrainian">Українська</string>
+    <string name="settings_currency_title">Валюта</string>
+    <string name="settings_currency_description">Выберите валюту для отображения цен.</string>
+    <string name="currency_uah">Гривна (UAH)</string>
+    <string name="currency_usd">Доллар США (USD)</string>
+    <string name="currency_eur">Евро (EUR)</string>
 
     <!-- Search -->
     <string name="search_products_hint">Поиск товаров</string>
@@ -156,8 +161,8 @@
     <string name="profile_edit_title">Редактирование профиля</string>
 
     <!-- Thank you -->
-    <string name="thank_you_title">Дякуємо!</string>
-    <string name="thank_you_message_with_id">Ваше замовлення №%1$s успішно оформлено.</string>
-    <string name="thank_you_message_generic">Ваше замовлення успішно оформлено.</string>
-    <string name="thank_you_continue_shopping">Продовжити покупки</string>
+    <string name="thank_you_title">Спасибо!</string>
+    <string name="thank_you_message_with_id">Ваш заказ №%1$s успешно оформлен.</string>
+    <string name="thank_you_message_generic">Ваш заказ успешно оформлен.</string>
+    <string name="thank_you_continue_shopping">Продолжить покупки</string>
 </resources>

@@ -23,6 +23,7 @@ import com.shop.app.R
 fun HomeScreen(
     uiState: ProductsUiState,
     modifier: Modifier = Modifier,
+    formatPrice: (Double) -> String,
     onProductClick: (String) -> Unit,
     onSearchClick: () -> Unit // This parameter is received from MainActivity
 ) {
@@ -49,6 +50,7 @@ fun HomeScreen(
                 item {
                     ProductRow(
                         products = state.products,
+                        formatPrice = formatPrice,
                         onProductClick = onProductClick
                     )
                 }
@@ -58,6 +60,7 @@ fun HomeScreen(
                 item {
                     ProductRow(
                         products = state.products.shuffled(),
+                        formatPrice = formatPrice,
                         onProductClick = onProductClick
                     )
                 }

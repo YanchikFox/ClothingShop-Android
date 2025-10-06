@@ -35,11 +35,11 @@ The app is a Jetpack Compose client that lets shoppers browse the catalogue, sea
    - Use *File → Open…* and select the cloned folder.
    - Let Gradle finish syncing. Dependencies are managed via the Gradle Version Catalog (`libs.versions.toml`).
 
-3. **Configure the backend endpoint**
+3. **Configure backend endpoints**
 
-   - Edit [`RetrofitInstance.kt`](https://github.com/YanchikFox/ClothingShop-Android/blob/main/app/src/main/java/com/shop/app/data/network/RetrofitInstance.kt).
-   - Set `BASE_URL` to point to your running backend (e.g. `http://10.0.2.2:3000/` for the Android emulator, or an HTTPS ngrok tunnel for real devices).
-   - Ensure the port matches the Express server (`3000` by default).
+   - Update the `buildConfigField` values for `API_BASE_URL` and `IMAGES_BASE_URL` inside [`app/build.gradle.kts`](https://github.com/YanchikFox/ClothingShop-Android/blob/main/app/build.gradle.kts).
+   - Use emulator-friendly hosts such as `http://10.0.2.2:3000/` or expose a secure tunnel (ngrok, Cloudflare Tunnel) for physical devices.
+   - Sync Gradle after editing so the new constants propagate to the generated `BuildConfig` used by `NetworkConfig`/`RetrofitInstance`.
 
 4. **Run the app**
 
@@ -61,9 +61,16 @@ app/
 
 ## Environment tips
 
-- Use the same seed data from `setup-database.js` when testing locally so the Android catalogue matches the backend inventory.
-- When testing on a real device, expose the API with a tunnelling service (ngrok, Cloudflare Tunnel) and update `BASE_URL` accordingly.
+- Use the same seed data from `setup-database.js` when testing locally so the Android catalogue matches the backend inventory and includes translated JSON fields.
+- The client automatically sends the selected language via the `Accept-Language` header; make sure your backend is up to date so it returns localized text.
+- When testing on a real device, expose the API with a tunnelling service (ngrok, Cloudflare Tunnel) and update the BuildConfig URLs accordingly.
 - The client persists auth tokens with DataStore; clearing app storage forces a fresh login.
+
+## Localization
+
+- Language preferences live in DataStore and propagate to both UI resources and API calls.
+- Use the in-app settings to switch between English, Russian, and Ukrainian; restarting the app is not required.
+- If server responses stay in English, reseed the database with the provided script so translated values are present.
 
 ## Useful Gradle tasks
 

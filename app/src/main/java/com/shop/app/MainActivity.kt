@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -33,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.shop.app.di.ServiceLocator
@@ -42,13 +44,30 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.shop.app.localization.LanguagePreferencesDataStore
 import com.shop.app.ui.screens.*
 import com.shop.app.ui.theme.TShopAppTheme
+import com.shop.app.ui.utils.rememberPriceFormatter
 import com.shop.app.ui.viewmodels.*
 import com.shop.app.R
+import kotlinx.coroutines.runBlocking
+import java.util.Locale
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        val initialLanguage = runBlocking {
+            LanguagePreferencesDataStore.currentLanguage(applicationContext)
+        }
+        val localeList = if (initialLanguage.isNullOrBlank()) {
+            LocaleListCompat.getEmptyLocaleList()
+        } else {
+            LocaleListCompat.forLanguageTags(initialLanguage)
+        }
+        AppCompatDelegate.setApplicationLocales(localeList)
+        if (!localeList.isEmpty) {
+            localeList[0]?.let { Locale.setDefault(it) }
+        }
+
         super.onCreate(savedInstanceState)
         ServiceLocator.initialize(applicationContext)
         enableEdgeToEdge()
@@ -69,6 +88,9 @@ fun AppNavigation() {
     val languageViewModel: LanguageViewModel = viewModel(
         factory = LanguageViewModel.provideFactory(context)
     )
+    val currencyViewModel: CurrencyViewModel = viewModel(
+        factory = CurrencyViewModel.provideFactory(context)
+    )
 
     val productsUiState by productsViewModel.uiState.collectAsStateWithLifecycle()
     val cartItems by cartViewModel.cartItems.collectAsStateWithLifecycle()
@@ -78,6 +100,7 @@ fun AppNavigation() {
     val profileUpdateState by authViewModel.profileUpdateState.collectAsStateWithLifecycle()
     val totalPrice by cartViewModel.totalPrice.collectAsStateWithLifecycle()
     val languageUiState by languageViewModel.uiState.collectAsStateWithLifecycle()
+    val currencyUiState by currencyViewModel.uiState.collectAsStateWithLifecycle()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -87,6 +110,8 @@ fun AppNavigation() {
             productsViewModel.refreshProducts()
             cartViewModel.refreshForLanguageChange()
         }
+
+        val priceFormatter = rememberPriceFormatter(currencyUiState)
 
         Scaffold(
             topBar = {
@@ -129,6 +154,7 @@ fun AppNavigation() {
                 composable("home") {
                     HomeScreen(
                         uiState = productsUiState,
+                        formatPrice = priceFormatter,
                         onProductClick = { productId ->
                             navController.navigate("product_detail/$productId")
                         },
@@ -141,6 +167,7 @@ fun AppNavigation() {
                 composable("search") {
                     SearchScreen(
                         languageTag = languageUiState.selectedLanguageTag,
+                        formatPrice = priceFormatter,
                         onProductClick = { productId ->
                             navController.navigate("product_detail/$productId")
                         }
@@ -159,6 +186,7 @@ fun AppNavigation() {
                 composable("product_list/{categoryId}") {
                     ProductListScreen(
                         languageTag = languageUiState.selectedLanguageTag,
+                        formatPrice = priceFormatter,
                         onProductClick = { productId ->
                             navController.navigate("product_detail/$productId")
                         }
@@ -170,6 +198,7 @@ fun AppNavigation() {
                         ProductDetailScreen(
                             productId = backStackEntry.arguments?.getString("productId"),
                             products = (productsUiState as ProductsUiState.Success).products,
+                            formatPrice = priceFormatter,
                             onAddToCartClick = { product, quantity ->
                                 cartViewModel.addToCart(product, quantity)
                                 Toast.makeText(
@@ -190,6 +219,7 @@ fun AppNavigation() {
                     CartScreen(
                         cartItems = cartItems,
                         totalPrice = totalPrice,
+                        formatPrice = priceFormatter,
                         onRemoveClick = { productId -> cartViewModel.removeFromCart(productId) },
                         onIncrement = { productId -> cartViewModel.incrementQuantity(productId) },
                         onDecrement = { productId -> cartViewModel.decrementQuantity(productId) }
@@ -233,9 +263,13 @@ fun AppNavigation() {
 
                 composable("settings") {
                     SettingsScreen(
-                        uiState = languageUiState,
+                        languageUiState = languageUiState,
+                        currencyUiState = currencyUiState,
                         onLanguageSelected = { option ->
                             languageViewModel.updateLanguage(option.languageTag)
+                        },
+                        onCurrencySelected = { option ->
+                            currencyViewModel.updateCurrency(option.code)
                         },
                         onBackClick = { navController.popBackStack() }
                     )

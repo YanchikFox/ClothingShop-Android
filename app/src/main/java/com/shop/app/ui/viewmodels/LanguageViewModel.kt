@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 data class LanguageOption(val languageTag: String?, val labelRes: Int)
 
@@ -55,6 +56,9 @@ class LanguageViewModel(private val repository: LanguageRepository) : ViewModel(
             LocaleListCompat.forLanguageTags(languageTag)
         }
         AppCompatDelegate.setApplicationLocales(localeList)
+        if (!localeList.isEmpty) {
+            localeList[0]?.let { Locale.setDefault(it) }
+        }
     }
 
     companion object {

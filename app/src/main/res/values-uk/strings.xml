@@ -19,7 +19,7 @@
     <string name="profile_email_format">Email: %1$s</string>
     <string name="profile_phone_format">Телефон: %1$s</string>
     <string name="profile_phone_unknown">не вказано</string>
-    <string name="profile_member_since">З нами з: %1$s</string>
+    <string name="profile_member_since">Разом з нами від %1$s</string>
     <string name="profile_addresses_title">Адреси доставки</string>
     <string name="profile_addresses_empty">Ви ще не додали жодної адреси</string>
     <string name="profile_address_city_country">%1$s, %2$s</string>
@@ -44,6 +44,11 @@
     <string name="language_english">English</string>
     <string name="language_russian">Русский</string>
     <string name="language_ukrainian">Українська</string>
+    <string name="settings_currency_title">Валюта</string>
+    <string name="settings_currency_description">Оберіть валюту для відображення цін.</string>
+    <string name="currency_uah">Гривня (UAH)</string>
+    <string name="currency_usd">Долар США (USD)</string>
+    <string name="currency_eur">Євро (EUR)</string>
 
     <!-- Search -->
     <string name="search_products_hint">Пошук товарів</string>

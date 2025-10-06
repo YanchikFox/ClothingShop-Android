@@ -22,21 +22,13 @@ import com.shop.app.data.model.ProductFeature
 import com.shop.app.data.model.ProductReview
 import androidx.compose.ui.res.stringResource
 import com.shop.app.R
-import java.text.NumberFormat
-import java.util.Locale
-
 @Composable
 fun ProductCard(
     product: Product,
+    formatPrice: (Double) -> String,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    val currencyFormat = remember {
-        NumberFormat.getCurrencyInstance(Locale.getDefault()).apply {
-            maximumFractionDigits = 0
-        }
-    }
-
     val mainImagePath = remember(product.imageUrls, product.imagePath) {
         product.imageUrls.firstOrNull() ?: product.imagePath
     }
@@ -72,7 +64,7 @@ fun ProductCard(
                 modifier = Modifier.padding(12.dp).defaultMinSize(minHeight = 80.dp)
             ) {
                 Text(
-                    text = currencyFormat.format(product.price),
+                    text = formatPrice(product.price),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -114,6 +106,7 @@ fun ProductCardPreview() {
     )
     ProductCard(
         product = sampleProduct,
+        formatPrice = { price -> "${price.toInt()} ₴" },
         modifier = Modifier.width(200.dp),
         onClick = {}
     )

@@ -93,6 +93,7 @@ private val sizeFilterOptions = listOf(
 fun SearchScreen(
     modifier: Modifier = Modifier,
     languageTag: String?,
+    formatPrice: (Double) -> String,
     onProductClick: (String) -> Unit,
     searchViewModel: SearchViewModel = viewModel(),
 ) {
@@ -203,6 +204,7 @@ fun SearchScreen(
                             items(products) { product ->
                                 ProductCard(
                                     product = product,
+                                    formatPrice = formatPrice,
                                     onClick = { onProductClick(product.id) }
                                 )
                             }

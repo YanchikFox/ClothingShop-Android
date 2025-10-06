@@ -55,8 +55,6 @@ import com.shop.app.di.ServiceLocator
 import com.shop.app.ui.theme.TShopAppTheme
 import androidx.compose.ui.res.stringResource
 import com.shop.app.R
-import java.text.NumberFormat
-import java.util.Locale
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -65,6 +63,7 @@ fun ProductDetailScreen(
     productId: String?,
     products: List<Product>,
     modifier: Modifier = Modifier,
+    formatPrice: (Double) -> String,
     onAddToCartClick: (product: Product, quantity: Int) -> Unit
 ) {
     val product = products.firstOrNull { it.id == productId }
@@ -75,12 +74,6 @@ fun ProductDetailScreen(
             Text(text = stringResource(R.string.product_not_found))
         }
         return
-    }
-
-    val currencyFormat = remember {
-        NumberFormat.getCurrencyInstance(Locale.getDefault()).apply {
-            maximumFractionDigits = 0
-        }
     }
 
     val galleryImages = remember(product.imageUrls, product.imagePath) {
@@ -105,7 +98,7 @@ fun ProductDetailScreen(
                 style = MaterialTheme.typography.headlineSmall
             )
             Text(
-                text = currencyFormat.format(product.price),
+                text = formatPrice(product.price),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -378,6 +371,7 @@ fun ProductDetailScreenPreview() {
         ProductDetailScreen(
             productId = sampleProduct.id,
             products = listOf(sampleProduct),
+            formatPrice = { price -> "${price.toInt()} ₴" },
             onAddToCartClick = { _, _ -> }
         )
     }

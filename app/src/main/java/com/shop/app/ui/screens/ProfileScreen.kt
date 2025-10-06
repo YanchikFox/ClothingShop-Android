@@ -46,6 +46,11 @@ import com.shop.app.data.model.UpdateAddressRequest
 import com.shop.app.R
 import com.shop.app.ui.viewmodels.ProfileUpdateState
 import androidx.compose.ui.window.Dialog
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+import com.shop.app.localization.rememberCurrentLocale
+
 
 @Composable
 fun ProfileScreen(
@@ -428,6 +433,16 @@ private fun ProfileDetails(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val locale = rememberCurrentLocale()
+    val memberSinceDate = remember(profile.createdAt, locale) {
+        runCatching {
+            OffsetDateTime.parse(profile.createdAt)
+                .format(
+                    DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)
+                        .withLocale(locale)
+                )
+        }.getOrElse { profile.createdAt }
+    }
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(16.dp),
@@ -462,7 +477,7 @@ private fun ProfileDetails(
                     val phoneText = profile.phone?.takeIf { it.isNotBlank() }
                         ?: stringResource(R.string.profile_phone_unknown)
                     Text(text = stringResource(R.string.profile_phone_format, phoneText))
-                    Text(text = stringResource(R.string.profile_member_since, profile.createdAt))
+                    Text(text = stringResource(R.string.profile_member_since, memberSinceDate))
                 }
             }
         }
