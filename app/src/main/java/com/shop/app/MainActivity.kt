@@ -1,7 +1,6 @@
 package com.shop.app
 
 import android.app.Activity
-import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -44,25 +43,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.shop.app.localization.LanguagePreferencesDataStore
-import com.shop.app.localization.createLocaleWrapper
 import com.shop.app.ui.screens.*
 import com.shop.app.ui.theme.TShopAppTheme
 import com.shop.app.ui.utils.rememberPriceFormatter
 import com.shop.app.ui.viewmodels.*
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
-
-    override fun attachBaseContext(newBase: Context) {
-        val language = runBlocking {
-            LanguagePreferencesDataStore.languageFlow(newBase).first()
-        }
-        val localeWrapper = newBase.createLocaleWrapper(language ?: "")
-        super.attachBaseContext(localeWrapper)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

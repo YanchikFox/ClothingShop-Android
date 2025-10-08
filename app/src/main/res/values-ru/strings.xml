@@ -44,6 +44,7 @@
     <string name="language_english">English</string>
     <string name="language_russian">Русский</string>
     <string name="language_ukrainian">Українська</string>
+    <string name="language_polish">Польский</string>
     <string name="settings_currency_title">Валюта</string>
     <string name="settings_currency_description">Выберите валюту для отображения цен.</string>
     <string name="currency_uah">Гривна (UAH)</string>

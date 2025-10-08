@@ -1,0 +1,169 @@
+<resources>
+    <string name="app_name">T Shop</string>
+    <string name="app_title">T SHOP</string>
+    <string name="cd_open_cart">Otwórz koszyk</string>
+    <string name="product_added_to_cart_toast">Dodano %1$s ×%2$d do koszyka</string>
+    <string name="auth_login_success">Logowanie powiodło się!</string>
+    <string name="auth_registration_success">Rejestracja zakończona sukcesem!</string>
+    <string name="nav_home">Start</string>
+    <string name="nav_catalog">Katalog</string>
+    <string name="nav_profile">Profil</string>
+
+    <!-- Profile -->
+    <string name="profile_prompt_title">Zaloguj się na swoje konto</string>
+    <string name="profile_prompt_subtitle">Uzyskaj dostęp do zapisanych produktów i historii zamówień</string>
+    <string name="profile_prompt_cta">Zaloguj się lub zarejestruj</string>
+    <string name="profile_open_settings">Język i ustawienia</string>
+    <string name="profile_title">Mój profil</string>
+    <string name="profile_default_name">Gość</string>
+    <string name="profile_email_format">Email: %1$s</string>
+    <string name="profile_phone_format">Telefon: %1$s</string>
+    <string name="profile_phone_unknown">nie podano</string>
+    <string name="profile_member_since">Z nami od: %1$s</string>
+    <string name="profile_addresses_title">Adresy dostawy</string>
+    <string name="profile_addresses_empty">Nie dodałeś jeszcze żadnego adresu</string>
+    <string name="profile_address_city_country">%1$s, %2$s</string>
+    <string name="profile_address_postal_code">Kod pocztowy: %1$s</string>
+    <string name="profile_orders_title">Historia zamówień</string>
+    <string name="profile_orders_empty">Brak zamówień</string>
+    <string name="profile_order_item_format">Zamówienie nr %1$s\nStatus: %2$s\nSuma: %3$s\nData: %4$s</string>
+    <string name="profile_logout">Wyloguj się</string>
+    <string name="profile_edit_action">Edytuj profil</string>
+    <string name="profile_update_success">Profil zaktualizowany</string>
+    <string name="profile_phone_error">Wpisz co najmniej 5 cyfr lub pozostaw puste</string>
+    <string name="profile_edit_make_default">Ustaw jako domyślny adres</string>
+    <string name="profile_edit_address_error">Wypełnij wszystkie wymagane pola adresu</string>
+    <string name="profile_address_default_badge">Domyślny</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Ustawienia</string>
+    <string name="cd_navigate_up">Wróć</string>
+    <string name="settings_language_title">Język</string>
+    <string name="settings_language_description">Wybierz język aplikacji lub użyj systemowego.</string>
+    <string name="language_system_default">Domyślny systemowy</string>
+    <string name="language_english">English</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_ukrainian">Українська</string>
+    <string name="language_polish">Polski</string>
+    <string name="settings_currency_title">Waluta</string>
+    <string name="settings_currency_description">Wybierz walutę używaną przy cenach.</string>
+    <string name="currency_uah">Hrywna ukraińska (UAH)</string>
+    <string name="currency_usd">Dolar amerykański (USD)</string>
+    <string name="currency_eur">Euro (EUR)</string>
+
+    <!-- Search -->
+    <string name="search_products_hint">Szukaj produktów</string>
+    <string name="cd_search">Szukaj</string>
+    <string name="cd_clear_search">Wyczyść wyszukiwanie</string>
+    <string name="search_field_label">Szukaj</string>
+    <string name="search_filters_title">Filtry</string>
+    <string name="search_filters_category">Kategoria</string>
+    <string name="search_filters_price">Cena</string>
+    <string name="search_filters_size">Rozmiar</string>
+    <string name="search_filters_sort">Sortowanie</string>
+    <string name="search_filter_category_all">Wszystkie</string>
+    <string name="search_filter_category_women">Kobiety</string>
+    <string name="search_filter_category_men">Mężczyźni</string>
+    <string name="search_filter_category_unisex">Uniseks</string>
+    <string name="search_filter_price_all">Dowolna cena</string>
+    <string name="search_filter_price_under_1500">Do 1500 ₴</string>
+    <string name="search_filter_price_1500_2500">1500–2500 ₴</string>
+    <string name="search_filter_price_over_2500">Od 2500 ₴</string>
+    <string name="search_filter_size_all">Wszystkie rozmiary</string>
+    <string name="size_xs">XS</string>
+    <string name="size_s">S</string>
+    <string name="size_m">M</string>
+    <string name="size_l">L</string>
+    <string name="size_xl">XL</string>
+    <string name="size_38">38</string>
+    <string name="size_39">39</string>
+    <string name="size_40">40</string>
+    <string name="size_41">41</string>
+    <string name="size_42">42</string>
+    <string name="size_43">43</string>
+    <string name="search_empty_prompt">Zacznij pisać lub wybierz filtry, aby odkrywać produkty</string>
+    <string name="search_empty_filtered">Nic nie pasuje do wybranych filtrów</string>
+    <string name="search_error_message">Nie udało się wczytać wyników</string>
+    <string name="search_retry">Spróbuj ponownie</string>
+    <string name="search_recent_queries_title">Ostatnie wyszukiwania</string>
+    <string name="search_clear_history">Wyczyść</string>
+    <string name="search_popular_title">Popularne teraz</string>
+    <string name="search_popular_query_tshirts">Koszulki z nadrukiem</string>
+    <string name="search_popular_query_dresses">Letnie sukienki</string>
+    <string name="search_popular_query_outerwear">Ciepła odzież wierzchnia</string>
+    <string name="search_popular_query_sneakers">Minimalistyczne sneakersy</string>
+    <string name="search_popular_query_accessories">Codzienne akcesoria</string>
+    <string name="search_sort_relevance">Według trafności</string>
+    <string name="search_sort_price_low_high">Cena: od najniższej</string>
+    <string name="search_sort_price_high_low">Cena: od najwyższej</string>
+    <string name="search_sort_newest">Najnowsze</string>
+    <string name="search_sort_name">Alfabetycznie</string>
+
+    <!-- Home -->
+    <string name="home_new_arrivals">Nowości</string>
+    <string name="home_recommended">Może Ci się spodobać</string>
+    <string name="error_loading_products">Nie udało się wczytać produktów</string>
+
+    <!-- Promo -->
+    <string name="promo_banner_title">WIELKIE CZYSZCZENIE MAGAZYNÓW
+DO -60%</string>
+
+    <!-- Product detail -->
+    <string name="product_not_found">Nie znaleziono produktu</string>
+    <string name="product_detail_composition">Skład</string>
+    <string name="product_detail_care">Pielęgnacja</string>
+    <string name="product_detail_features">Cechy</string>
+    <string name="product_detail_reviews">Opinie</string>
+    <string name="product_add_to_cart">Dodaj do koszyka</string>
+    <string name="product_image_unavailable">Brak dostępnego zdjęcia</string>
+    <string name="product_review_rating">%1$d/5</string>
+    <string name="product_badge_bestseller">HIT</string>
+
+    <!-- Quantity accessibility -->
+    <string name="cd_decrease_quantity">Zmniejsz liczbę sztuk</string>
+    <string name="cd_increase_quantity">Zwiększ liczbę sztuk</string>
+    <string name="cd_remove_item">Usuń pozycję</string>
+
+    <!-- Cart -->
+    <string name="cart_empty_message">Twój koszyk jest pusty</string>
+    <string name="cart_total_amount">Razem: %1$s</string>
+    <string name="cart_checkout_placeholder">Finalizacja zamówienia będzie dostępna w następnej wersji</string>
+
+    <!-- Product lists -->
+    <string name="product_list_empty_message">Produkty z tej kategorii pojawią się wkrótce</string>
+
+    <!-- Catalog -->
+    <string name="catalog_error_loading">Nie udało się wczytać kategorii</string>
+
+    <!-- Auth -->
+    <string name="login_title">Zaloguj się</string>
+    <string name="field_email">Email</string>
+    <string name="field_password">Hasło</string>
+    <string name="field_name">Imię</string>
+    <string name="field_phone">Telefon</string>
+    <string name="action_sign_in">Zaloguj się</string>
+    <string name="login_register_prompt">Nie masz konta? Zarejestruj się</string>
+    <string name="register_title">Utwórz konto</string>
+    <string name="action_register">Zarejestruj się</string>
+    <string name="register_login_prompt">Masz już konto? Zaloguj się</string>
+    <string name="action_cancel">Anuluj</string>
+    <string name="action_save">Zapisz</string>
+
+    <!-- Address management -->
+    <string name="address_label_label">Etykieta</string>
+    <string name="address_line1_label">Ulica i numer</string>
+    <string name="address_line2_label">Mieszkanie, klatka</string>
+    <string name="address_city_label">Miasto</string>
+    <string name="address_postal_code_label">Kod pocztowy</string>
+    <string name="address_country_label">Kraj</string>
+    <string name="address_mark_default">Ustaw jako domyślny</string>
+    <string name="address_remove">Usuń adres</string>
+    <string name="address_add">Dodaj adres</string>
+    <string name="profile_edit_title">Edytuj profil</string>
+
+    <!-- Thank you -->
+    <string name="thank_you_title">Dziękujemy!</string>
+    <string name="thank_you_message_with_id">Twoje zamówienie nr %1$s zostało pomyślnie złożone.</string>
+    <string name="thank_you_message_generic">Twoje zamówienie zostało pomyślnie złożone.</string>
+    <string name="thank_you_continue_shopping">Kontynuuj zakupy</string>
+</resources>

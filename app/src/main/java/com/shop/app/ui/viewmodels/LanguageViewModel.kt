@@ -1,7 +1,5 @@
 package com.shop.app.ui.viewmodels
 
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -12,7 +10,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.Locale
 
 data class LanguageOption(val languageTag: String?, val labelRes: Int)
 
@@ -34,7 +31,6 @@ class LanguageViewModel(private val repository: LanguageRepository) : ViewModel(
     init {
         viewModelScope.launch {
             repository.languageFlow.collect { languageTag ->
-                applyLanguage(languageTag)
                 _uiState.update { current ->
                     current.copy(selectedLanguageTag = languageTag)
                 }
@@ -48,24 +44,13 @@ class LanguageViewModel(private val repository: LanguageRepository) : ViewModel(
         }
     }
 
-    private fun applyLanguage(languageTag: String?) {
-        val localeList = if (languageTag.isNullOrBlank()) {
-            LocaleListCompat.getEmptyLocaleList()
-        } else {
-            LocaleListCompat.forLanguageTags(languageTag)
-        }
-        AppCompatDelegate.setApplicationLocales(localeList)
-        if (!localeList.isEmpty) {
-            localeList[0]?.let { Locale.setDefault(it) }
-        }
-    }
-
     companion object {
         val availableOptions = listOf(
             LanguageOption(null, R.string.language_system_default),
             LanguageOption("en", R.string.language_english),
             LanguageOption("ru", R.string.language_russian),
-            LanguageOption("uk", R.string.language_ukrainian)
+            LanguageOption("uk", R.string.language_ukrainian),
+            LanguageOption("pl", R.string.language_polish)
         )
 
         fun provideFactory(repository: LanguageRepository): ViewModelProvider.Factory {
