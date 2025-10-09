@@ -7,6 +7,7 @@ import com.shop.app.data.network.RetrofitInstance
 import com.shop.app.data.repository.AuthRepository
 import com.shop.app.data.repository.CartRepository
 import com.shop.app.data.repository.CatalogRepository
+import com.shop.app.data.repository.OnboardingPreferencesRepository
 import com.shop.app.data.repository.ProductRepository
 import com.shop.app.data.repository.UserRepository
 import com.shop.app.localization.LanguageRepository
@@ -18,6 +19,7 @@ interface AppContainer {
     val catalogRepository: CatalogRepository
     val authRepository: AuthRepository
     val productRepository: ProductRepository
+    val onboardingPreferencesRepository: OnboardingPreferencesRepository
     fun getImagesBaseUrl(): String
 }
 
@@ -54,6 +56,10 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
 
     override val productRepository: ProductRepository by lazy {
         ProductRepository(retrofitInstance.api)
+    }
+
+    override val onboardingPreferencesRepository: OnboardingPreferencesRepository by lazy {
+        OnboardingPreferencesRepository(context)
     }
 
     override fun getImagesBaseUrl(): String {

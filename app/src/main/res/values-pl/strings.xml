@@ -9,6 +9,27 @@
     <string name="nav_catalog">Katalog</string>
     <string name="nav_profile">Profil</string>
 
+    <!-- Onboarding -->
+    <string name="onboarding_title">Powiedz nam, co lubisz</string>
+    <string name="onboarding_subtitle">Spersonalizujemy katalog na podstawie Twoich zainteresowań.</string>
+    <string name="onboarding_categories_title">Kategorie</string>
+    <string name="onboarding_categories_subtitle">Wybierz kategorie, które Cię interesują.</string>
+    <string name="onboarding_brands_title">Marki</string>
+    <string name="onboarding_brands_subtitle">Wybierz ulubione marki, aby je wyróżnić.</string>
+    <string name="onboarding_price_title">Preferowany przedział cenowy</string>
+    <string name="onboarding_price_subtitle">Dostosuj suwak, aby ustawić wygodny dla Ciebie przedział cenowy.</string>
+    <string name="onboarding_price_format">Od %1$d do %2$d ₴</string>
+    <string name="onboarding_continue">Zapisz preferencje</string>
+    <string name="onboarding_skip">Pomiń na razie</string>
+    <string name="onboarding_category_women">Kobiety</string>
+    <string name="onboarding_category_men">Mężczyźni</string>
+    <string name="onboarding_category_unisex">Uniseks</string>
+    <string name="onboarding_category_kids">Dzieci</string>
+    <string name="onboarding_brand_acme">ACME Studios</string>
+    <string name="onboarding_brand_nord">Nord Supply</string>
+    <string name="onboarding_brand_aurora">Aurora Atelier</string>
+    <string name="onboarding_brand_vertex">Vertex Sports</string>
+
     <!-- Profile -->
     <string name="profile_prompt_title">Zaloguj się na swoje konto</string>
     <string name="profile_prompt_subtitle">Uzyskaj dostęp do zapisanych produktów i historii zamówień</string>

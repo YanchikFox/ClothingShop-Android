@@ -9,6 +9,27 @@
     <string name="nav_catalog">Каталог</string>
     <string name="nav_profile">Профиль</string>
 
+    <!-- Onboarding -->
+    <string name="onboarding_title">Расскажите, что вам нравится</string>
+    <string name="onboarding_subtitle">Мы подберем каталог на основе ваших интересов.</string>
+    <string name="onboarding_categories_title">Категории</string>
+    <string name="onboarding_categories_subtitle">Выберите интересующие вас категории.</string>
+    <string name="onboarding_brands_title">Бренды</string>
+    <string name="onboarding_brands_subtitle">Выберите любимые бренды, чтобы выделить их.</string>
+    <string name="onboarding_price_title">Предпочтительный диапазон цен</string>
+    <string name="onboarding_price_subtitle">Настройте ползунок, чтобы задать удобный для вас диапазон цен.</string>
+    <string name="onboarding_price_format">От %1$d до %2$d ₴</string>
+    <string name="onboarding_continue">Сохранить предпочтения</string>
+    <string name="onboarding_skip">Пропустить</string>
+    <string name="onboarding_category_women">Женщины</string>
+    <string name="onboarding_category_men">Мужчины</string>
+    <string name="onboarding_category_unisex">Унисекс</string>
+    <string name="onboarding_category_kids">Дети</string>
+    <string name="onboarding_brand_acme">ACME Studios</string>
+    <string name="onboarding_brand_nord">Nord Supply</string>
+    <string name="onboarding_brand_aurora">Aurora Atelier</string>
+    <string name="onboarding_brand_vertex">Vertex Sports</string>
+
     <!-- Profile -->
     <string name="profile_prompt_title">Войдите в свой аккаунт</string>
     <string name="profile_prompt_subtitle">Чтобы просматривать сохранённые товары и историю заказов</string>

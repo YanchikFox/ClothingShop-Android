@@ -9,6 +9,27 @@
     <string name="nav_catalog">Catalog</string>
     <string name="nav_profile">Profile</string>
 
+    <!-- Onboarding -->
+    <string name="onboarding_title">Tell us what you like</string>
+    <string name="onboarding_subtitle">We will personalize the catalog based on your interests.</string>
+    <string name="onboarding_categories_title">Categories</string>
+    <string name="onboarding_categories_subtitle">Choose categories you are interested in.</string>
+    <string name="onboarding_brands_title">Brands</string>
+    <string name="onboarding_brands_subtitle">Select favorite brands to highlight.</string>
+    <string name="onboarding_price_title">Preferred price range</string>
+    <string name="onboarding_price_subtitle">Adjust the slider to set the price range you are comfortable with.</string>
+    <string name="onboarding_price_format">From %1$d to %2$d ₴</string>
+    <string name="onboarding_continue">Save preferences</string>
+    <string name="onboarding_skip">Skip for now</string>
+    <string name="onboarding_category_women">Women</string>
+    <string name="onboarding_category_men">Men</string>
+    <string name="onboarding_category_unisex">Unisex</string>
+    <string name="onboarding_category_kids">Kids</string>
+    <string name="onboarding_brand_acme">ACME Studios</string>
+    <string name="onboarding_brand_nord">Nord Supply</string>
+    <string name="onboarding_brand_aurora">Aurora Atelier</string>
+    <string name="onboarding_brand_vertex">Vertex Sports</string>
+
     <!-- Profile -->
     <string name="profile_prompt_title">Sign in to your account</string>
     <string name="profile_prompt_subtitle">Access saved items and order history</string>

@@ -20,7 +20,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -47,6 +46,8 @@ import com.shop.app.ui.screens.*
 import com.shop.app.ui.theme.TShopAppTheme
 import com.shop.app.ui.utils.rememberPriceFormatter
 import com.shop.app.ui.viewmodels.*
+import com.shop.app.ui.viewmodels.OnboardingViewModel.OnboardingCompletionState
+import com.shop.app.ui.viewmodels.OnboardingViewModel.OnboardingEvent
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -76,6 +77,9 @@ fun AppNavigation() {
     val currencyViewModel: CurrencyViewModel = viewModel(
         factory = CurrencyViewModel.provideFactory(context)
     )
+    val onboardingViewModel: OnboardingViewModel = viewModel(
+        factory = OnboardingViewModel.provideFactory(application.container.onboardingPreferencesRepository)
+    )
 
     val productsUiState by productsViewModel.uiState.collectAsStateWithLifecycle()
     val cartItems by cartViewModel.cartItems.collectAsStateWithLifecycle()
@@ -86,12 +90,25 @@ fun AppNavigation() {
     val totalPrice by cartViewModel.totalPrice.collectAsStateWithLifecycle()
     val languageUiState by languageViewModel.uiState.collectAsStateWithLifecycle()
     val currencyUiState by currencyViewModel.uiState.collectAsStateWithLifecycle()
+    val onboardingUiState by onboardingViewModel.uiState.collectAsStateWithLifecycle()
+    val onboardingCompletionState by onboardingViewModel.completionState.collectAsStateWithLifecycle()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     TShopAppTheme {
         val priceFormatter = rememberPriceFormatter(currencyUiState)
+
+        LaunchedEffect(Unit) {
+            onboardingViewModel.events.collect { event ->
+                if (event is OnboardingEvent.Completed) {
+                    navController.navigate("home") {
+                        popUpTo("onboarding") { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            }
+        }
 
         Scaffold(
             topBar = {
@@ -126,141 +143,172 @@ fun AppNavigation() {
                 AppBottomBar(navController = navController)
             }
         ) { innerPadding ->
-            NavHost(
-                navController = navController,
-                startDestination = "home",
-                modifier = Modifier.padding(innerPadding)
-            ) {
-                composable("home") {
-                    HomeScreen(
-                        uiState = productsUiState,
-                        formatPrice = priceFormatter,
-                        onProductClick = { productId ->
-                            navController.navigate("product_detail/$productId")
-                        },
-                        onSearchClick = {
-                            navController.navigate("search")
-                        }
-                    )
-                }
-
-                composable("search") {
-                    SearchScreen(
-                        languageTag = languageUiState.selectedLanguageTag,
-                        formatPrice = priceFormatter,
-                        onProductClick = { productId ->
-                            navController.navigate("product_detail/$productId")
-                        }
-                    )
-                }
-
-                composable("catalog") {
-                    CatalogScreen(
-                        catalogViewModel = catalogViewModel,
-                        onCategoryClick = { categoryId ->
-                            navController.navigate("product_list/$categoryId")
-                        },
-                        imagesBaseUrl = application.container.getImagesBaseUrl()
-                    )
-                }
-
-                composable("product_list/{categoryId}") {
-                    ProductListScreen(
-                        languageTag = languageUiState.selectedLanguageTag,
-                        formatPrice = priceFormatter,
-                        onProductClick = { productId ->
-                            navController.navigate("product_detail/$productId")
-                        }
-                    )
-                }
-
-                composable("product_detail/{productId}") { backStackEntry ->
-                    if (productsUiState is ProductsUiState.Success) {
-                        ProductDetailScreen(
-                            productId = backStackEntry.arguments?.getString("productId"),
-                            products = (productsUiState as ProductsUiState.Success).products,
-                            formatPrice = priceFormatter,
-                            imagesBaseUrl = application.container.getImagesBaseUrl(),
-                            onAddToCartClick = { product, quantity ->
-                                cartViewModel.addToCart(product, quantity)
-                                Toast.makeText(
-                                    context,
-                                    context.getString(
-                                        R.string.product_added_to_cart_toast,
-                                        product.name,
-                                        quantity
-                                    ),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        )
+            when (val completionState = onboardingCompletionState) {
+                OnboardingCompletionState.Loading -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
                     }
                 }
 
-                composable("cart") {
-                    CartScreen(
-                        cartItems = cartItems,
-                        totalPrice = totalPrice,
-                        formatPrice = priceFormatter,
-                        imagesBaseUrl = application.container.getImagesBaseUrl(),
-                        onRemoveClick = { productId -> cartViewModel.removeFromCart(productId) },
-                        onIncrement = { productId -> cartViewModel.incrementQuantity(productId) },
-                        onDecrement = { productId -> cartViewModel.decrementQuantity(productId) }
-                    )
-                }
-
-                composable("profile") {
-                    ProfileScreen(
-                        isLoggedIn = isLoggedIn,
-                        userProfile = userProfile,
-                        profileUpdateState = profileUpdateState,
-                        onLoginClick = { navController.navigate("login") },
-                        onLogoutClick = { authViewModel.logout() },
-                        onSettingsClick = { navController.navigate("settings") },
-                        onSaveProfile = { request -> authViewModel.updateProfile(request) },
-                        onProfileUpdateHandled = { authViewModel.resetProfileUpdateState() }
-                    )
-                }
-
-                composable("login") {
-                    LoginScreen(
-                        onLoginClick = { email, password ->
-                            authViewModel.login(email, password)
-                        },
-                        onNavigateToRegister = {
-                            navController.navigate("register")
+                else -> {
+                    val startDestination = if (completionState is OnboardingCompletionState.Completed) {
+                        "home"
+                    } else {
+                        "onboarding"
+                    }
+                    NavHost(
+                        navController = navController,
+                        startDestination = startDestination,
+                        modifier = Modifier.padding(innerPadding)
+                    ) {
+                        composable("onboarding") {
+                            OnboardingScreen(
+                                uiState = onboardingUiState,
+                                onCategoryToggle = onboardingViewModel::toggleCategory,
+                                onBrandToggle = onboardingViewModel::toggleBrand,
+                                onPriceRangeChange = onboardingViewModel::updatePriceRange,
+                                onContinueClick = onboardingViewModel::savePreferences,
+                                onSkipClick = onboardingViewModel::skipOnboarding
+                            )
                         }
-                    )
-                }
 
-                composable("register") {
-                    RegisterScreen(
-                        onRegisterClick = { email, password ->
-                            authViewModel.register(email, password)
-                        },
-                        onNavigateToLogin = {
-                            navController.popBackStack()
+                        composable("home") {
+                            HomeScreen(
+                                uiState = productsUiState,
+                                formatPrice = priceFormatter,
+                                onProductClick = { productId ->
+                                    navController.navigate("product_detail/$productId")
+                                },
+                                onSearchClick = {
+                                    navController.navigate("search")
+                                }
+                            )
                         }
-                    )
-                }
 
-                composable("settings") {
-                    val activity = LocalContext.current as? Activity
-                    val scope = rememberCoroutineScope()
-                    SettingsScreen(
-                        languageUiState = languageUiState,
-                        currencyUiState = currencyUiState,
-                        onLanguageSelected = { option ->
-                            scope.launch {
-                                languageViewModel.updateLanguage(option.languageTag)
-                                activity?.recreate()
+                        composable("search") {
+                            SearchScreen(
+                                languageTag = languageUiState.selectedLanguageTag,
+                                formatPrice = priceFormatter,
+                                onProductClick = { productId ->
+                                    navController.navigate("product_detail/$productId")
+                                }
+                            )
+                        }
+
+                        composable("catalog") {
+                            CatalogScreen(
+                                catalogViewModel = catalogViewModel,
+                                onCategoryClick = { categoryId ->
+                                    navController.navigate("product_list/$categoryId")
+                                },
+                                imagesBaseUrl = application.container.getImagesBaseUrl()
+                            )
+                        }
+
+                        composable("product_list/{categoryId}") {
+                            ProductListScreen(
+                                languageTag = languageUiState.selectedLanguageTag,
+                                formatPrice = priceFormatter,
+                                onProductClick = { productId ->
+                                    navController.navigate("product_detail/$productId")
+                                }
+                            )
+                        }
+
+                        composable("product_detail/{productId}") { backStackEntry ->
+                            if (productsUiState is ProductsUiState.Success) {
+                                ProductDetailScreen(
+                                    productId = backStackEntry.arguments?.getString("productId"),
+                                    products = (productsUiState as ProductsUiState.Success).products,
+                                    formatPrice = priceFormatter,
+                                    imagesBaseUrl = application.container.getImagesBaseUrl(),
+                                    onAddToCartClick = { product, quantity ->
+                                        cartViewModel.addToCart(product, quantity)
+                                        Toast.makeText(
+                                            context,
+                                            context.getString(
+                                                R.string.product_added_to_cart_toast,
+                                                product.name,
+                                                quantity
+                                            ),
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                )
                             }
-                        },
-                        onCurrencySelected = { option ->
-                            currencyViewModel.updateCurrency(option.code)
-                        },
-                        onBackClick = { navController.popBackStack() }
-                    )
+                        }
+
+                        composable("cart") {
+                            CartScreen(
+                                cartItems = cartItems,
+                                totalPrice = totalPrice,
+                                formatPrice = priceFormatter,
+                                imagesBaseUrl = application.container.getImagesBaseUrl(),
+                                onRemoveClick = { productId -> cartViewModel.removeFromCart(productId) },
+                                onIncrement = { productId -> cartViewModel.incrementQuantity(productId) },
+                                onDecrement = { productId -> cartViewModel.decrementQuantity(productId) }
+                            )
+                        }
+
+                        composable("profile") {
+                            ProfileScreen(
+                                isLoggedIn = isLoggedIn,
+                                userProfile = userProfile,
+                                profileUpdateState = profileUpdateState,
+                                onLoginClick = { navController.navigate("login") },
+                                onLogoutClick = { authViewModel.logout() },
+                                onSettingsClick = { navController.navigate("settings") },
+                                onSaveProfile = { request -> authViewModel.updateProfile(request) },
+                                onProfileUpdateHandled = { authViewModel.resetProfileUpdateState() }
+                            )
+                        }
+
+                        composable("login") {
+                            LoginScreen(
+                                onLoginClick = { email, password ->
+                                    authViewModel.login(email, password)
+                                },
+                                onNavigateToRegister = {
+                                    navController.navigate("register")
+                                }
+                            )
+                        }
+
+                        composable("register") {
+                            RegisterScreen(
+                                onRegisterClick = { email, password ->
+                                    authViewModel.register(email, password)
+                                },
+                                onNavigateToLogin = {
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
+
+                        composable("settings") {
+                            val activity = LocalContext.current as? Activity
+                            val scope = rememberCoroutineScope()
+                            SettingsScreen(
+                                languageUiState = languageUiState,
+                                currencyUiState = currencyUiState,
+                                onLanguageSelected = { option ->
+                                    scope.launch {
+                                        languageViewModel.updateLanguage(option.languageTag)
+                                        activity?.recreate()
+                                    }
+                                },
+                                onCurrencySelected = { option ->
+                                    currencyViewModel.updateCurrency(option.code)
+                                },
+                                onBackClick = { navController.popBackStack() }
+                            )
+                        }
+                    }
                 }
             }
 
