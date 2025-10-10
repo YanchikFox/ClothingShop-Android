@@ -5,7 +5,9 @@ import com.shop.app.data.model.AuthRequest
 import com.shop.app.data.model.AuthResponse
 import com.shop.app.data.model.CartItemResponse
 import com.shop.app.data.model.Category
+import com.shop.app.data.model.PersonalRecommendationsRequest
 import com.shop.app.data.model.Product
+import com.shop.app.data.model.RecommendationItem
 import com.shop.app.data.model.ProfileResponse
 import com.shop.app.data.model.ProfileUpdateRequest
 import com.shop.app.data.model.UpdateCartRequest
@@ -20,7 +22,16 @@ import retrofit2.http.Query
 interface ApiService {
     // Products and Categories
     @GET("products")
-    suspend fun getProducts(@Query("gender") gender: String? = null): List<Product>
+    suspend fun getProducts(
+        @Query("gender") gender: String? = null,
+        @Query("categoryId") categoryId: String? = null,
+        @Query("minPrice") minPrice: Double? = null,
+        @Query("maxPrice") maxPrice: Double? = null,
+        @Query("sortBy") sortBy: String? = null,
+        @Query("sortOrder") sortOrder: String? = null,
+        @Query("limit") limit: Int? = null,
+        @Query("page") page: Int? = null,
+    ): List<Product>
 
     @GET("categories")
     suspend fun getCategories(): List<Category>
@@ -59,5 +70,18 @@ interface ApiService {
     suspend fun searchProducts(
         @Query("q") query: String? = null,
         @Query("gender") gender: String? = null,
+        @Query("categoryId") categoryId: String? = null,
     ): List<Product>
+
+    @GET("recs/similar")
+    suspend fun getSimilarProducts(
+        @Query("product_id") productId: String,
+        @Query("limit") limit: Int? = null,
+    ): List<RecommendationItem>
+
+    @POST("recs/personal")
+    suspend fun getPersonalRecommendations(
+        @Body request: PersonalRecommendationsRequest,
+        @Query("limit") limit: Int? = null,
+    ): List<RecommendationItem>
 }

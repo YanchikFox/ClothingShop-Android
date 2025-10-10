@@ -64,7 +64,7 @@ class ProductListViewModel(
         viewModelScope.launch {
             _uiState.value = ProductsUiState.Loading
             try {
-                val products = productRepository.getProducts(gender = categoryId)
+                val products = productRepository.getProducts(categoryId = categoryId)
                 _uiState.value = ProductsUiState.Success(products)
             } catch (e: Exception) {
                 e.printStackTrace()

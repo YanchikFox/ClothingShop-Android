@@ -15,7 +15,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -35,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.res.stringResource
 import com.shop.app.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CatalogScreen(
     modifier: Modifier = Modifier,
@@ -42,61 +45,66 @@ fun CatalogScreen(
     onCategoryClick: (String) -> Unit,
     imagesBaseUrl: String,
 ) {
-    // Subscribe to UI state changes
     val uiState by catalogViewModel.uiState.collectAsState()
+    val isRefreshing = uiState is CatalogUiState.Loading
 
-    // Render different UI based on state
-    when (val state = uiState) {
-        is CatalogUiState.Loading -> {
-            Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
+    PullToRefreshBox(
+        isRefreshing = isRefreshing,
+        onRefresh = { catalogViewModel.refreshCategories() },
+        modifier = modifier.fillMaxSize()
+    ) {
+        when (val state = uiState) {
+            is CatalogUiState.Loading -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
             }
-        }
-        is CatalogUiState.Success -> {
-            val categoriesByParent = state.categories.groupBy { it.parentId }
-            val rootCategories = categoriesByParent[null].orEmpty()
+            is CatalogUiState.Success -> {
+                val categoriesByParent = state.categories.groupBy { it.parentId }
+                val rootCategories = categoriesByParent[null].orEmpty()
 
-            LazyColumn(
-                modifier = modifier.fillMaxSize(),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(24.dp)
-            ) {
-                items(rootCategories) { category ->
-                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        Text(
-                            text = category.name,
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold
-                        )
-                        CategoryCard(
-                            category = category,
-                            modifier = Modifier.fillMaxWidth().height(180.dp),
-                            imagesBaseUrl = imagesBaseUrl,
-                            onClick = { onCategoryClick(category.id) }
-                        )
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(24.dp)
+                ) {
+                    items(rootCategories) { category ->
+                        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                            Text(
+                                text = category.name,
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold
+                            )
+                            CategoryCard(
+                                category = category,
+                                modifier = Modifier.fillMaxWidth().height(180.dp),
+                                imagesBaseUrl = imagesBaseUrl,
+                                onClick = { onCategoryClick(category.id) }
+                            )
 
-                        val children = categoriesByParent[category.id].orEmpty()
-                        if (children.isNotEmpty()) {
-                            LazyRow(
-                                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                                contentPadding = PaddingValues(end = 16.dp)
-                            ) {
-                                items(children) { child ->
-                                    SubcategoryChip(
-                                        category = child,
-                                        onClick = { onCategoryClick(child.id) },
-                                        imagesBaseUrl = imagesBaseUrl
-                                    )
+                            val children = categoriesByParent[category.id].orEmpty()
+                            if (children.isNotEmpty()) {
+                                LazyRow(
+                                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                    contentPadding = PaddingValues(end = 16.dp)
+                                ) {
+                                    items(children) { child ->
+                                        SubcategoryChip(
+                                            category = child,
+                                            onClick = { onCategoryClick(child.id) },
+                                            imagesBaseUrl = imagesBaseUrl
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-        }
-        is CatalogUiState.Error -> {
-            Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(stringResource(R.string.catalog_error_loading))
+            is CatalogUiState.Error -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(stringResource(R.string.catalog_error_loading))
+                }
             }
         }
     }

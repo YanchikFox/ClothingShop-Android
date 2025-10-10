@@ -71,6 +71,9 @@
     <string name="currency_uah">Ukrainian hryvnia (UAH)</string>
     <string name="currency_usd">US dollar (USD)</string>
     <string name="currency_eur">Euro (EUR)</string>
+    <string name="settings_preferences_title">Preferences</string>
+    <string name="settings_preferences_description">Manage your shopping preferences and personalization.</string>
+    <string name="settings_reset_onboarding">Change preferences</string>
 
     <!-- Search -->
     <string name="search_products_hint">Search products</string>
@@ -123,6 +126,8 @@
     <!-- Home -->
     <string name="home_new_arrivals">New arrivals</string>
     <string name="home_recommended">You might like</string>
+    <string name="home_for_you">For you</string>
+    <string name="home_popular">Popular right now</string>
     <string name="error_loading_products">Failed to load products</string>
 
     <!-- Promo -->
@@ -135,6 +140,7 @@ UP TO -60% OFF</string>
     <string name="product_detail_care">Care</string>
     <string name="product_detail_features">Features</string>
     <string name="product_detail_reviews">Reviews</string>
+    <string name="product_detail_similar">Similar items</string>
     <string name="product_add_to_cart">Add to cart</string>
     <string name="product_image_unavailable">No image available</string>
     <string name="product_review_rating">%1$d/5</string>

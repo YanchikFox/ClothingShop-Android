@@ -69,7 +69,12 @@ fun AppNavigation() {
     val cartViewModel: CartViewModel = viewModel(factory = CartViewModel.provideFactory(application.container.cartRepository, application.container.authRepository))
     val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.provideFactory(application.container.userRepository, application.container.authRepository))
     val catalogViewModel: CatalogViewModel = viewModel(factory = CatalogViewModel.provideFactory(application.container.catalogRepository))
-    val productsViewModel: ProductsViewModel = viewModel(factory = ProductsViewModel.provideFactory(application.container.productRepository))
+    val productsViewModel: ProductsViewModel = viewModel(
+        factory = ProductsViewModel.provideFactory(
+            application.container.productRepository,
+            application.container.onboardingPreferencesRepository
+        )
+    )
     val context = LocalContext.current
     val languageViewModel: LanguageViewModel = viewModel(
         factory = LanguageViewModel.provideFactory(application.container.languageRepository)
@@ -186,6 +191,9 @@ fun AppNavigation() {
                                 },
                                 onSearchClick = {
                                     navController.navigate("search")
+                                },
+                                onRefresh = {
+                                    productsViewModel.refreshProducts()
                                 }
                             )
                         }
@@ -221,6 +229,14 @@ fun AppNavigation() {
                         }
 
                         composable("product_detail/{productId}") { backStackEntry ->
+                            val productDetailViewModel: ProductDetailViewModel = viewModel(
+                                factory = ProductDetailViewModel.provideFactory(
+                                    application.container.productRepository,
+                                    backStackEntry.savedStateHandle
+                                )
+                            )
+                            val similarUiState by productDetailViewModel.similarUiState.collectAsStateWithLifecycle()
+
                             if (productsUiState is ProductsUiState.Success) {
                                 ProductDetailScreen(
                                     productId = backStackEntry.arguments?.getString("productId"),
@@ -238,6 +254,10 @@ fun AppNavigation() {
                                             ),
                                             Toast.LENGTH_SHORT
                                         ).show()
+                                    },
+                                    similarUiState = similarUiState,
+                                    onProductClick = { productId ->
+                                        navController.navigate("product_detail/$productId")
                                     }
                                 )
                             }
@@ -297,13 +317,19 @@ fun AppNavigation() {
                                 languageUiState = languageUiState,
                                 currencyUiState = currencyUiState,
                                 onLanguageSelected = { option ->
-                                    scope.launch {
-                                        languageViewModel.updateLanguage(option.languageTag)
-                                        activity?.recreate()
-                                    }
+                                    languageViewModel.updateLanguage(option.languageTag)
                                 },
                                 onCurrencySelected = { option ->
                                     currencyViewModel.updateCurrency(option.code)
+                                },
+                                onResetOnboarding = {
+                                    scope.launch {
+                                        onboardingViewModel.resetOnboarding()
+                                        navController.navigate("onboarding") {
+                                            popUpTo("home") { inclusive = false }
+                                            launchSingleTop = true
+                                        }
+                                    }
                                 },
                                 onBackClick = { navController.popBackStack() }
                             )

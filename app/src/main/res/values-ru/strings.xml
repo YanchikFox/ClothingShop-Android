@@ -71,6 +71,9 @@
     <string name="currency_uah">Гривна (UAH)</string>
     <string name="currency_usd">Доллар США (USD)</string>
     <string name="currency_eur">Евро (EUR)</string>
+    <string name="settings_preferences_title">Предпочтения</string>
+    <string name="settings_preferences_description">Управляйте своими предпочтениями покупок и персонализацией.</string>
+    <string name="settings_reset_onboarding">Изменить предпочтения</string>
 
     <!-- Search -->
     <string name="search_products_hint">Поиск товаров</string>
@@ -123,6 +126,8 @@
     <!-- Home -->
     <string name="home_new_arrivals">Новинки</string>
     <string name="home_recommended">Вам может понравиться</string>
+    <string name="home_for_you">Для вас</string>
+    <string name="home_popular">Популярное сейчас</string>
     <string name="error_loading_products">Не удалось загрузить товары</string>
 
     <!-- Promo -->
@@ -135,6 +140,7 @@
     <string name="product_detail_care">Уход</string>
     <string name="product_detail_features">Характеристики</string>
     <string name="product_detail_reviews">Отзывы</string>
+    <string name="product_detail_similar">Похожие товары</string>
     <string name="product_add_to_cart">Добавить в корзину</string>
     <string name="product_image_unavailable">Нет изображения</string>
     <string name="product_review_rating">%1$d/5</string>

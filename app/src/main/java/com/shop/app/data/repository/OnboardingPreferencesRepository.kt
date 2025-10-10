@@ -25,4 +25,8 @@ class OnboardingPreferencesRepository(private val context: Context) {
             completed = true
         )
     }
+
+    suspend fun resetOnboarding() {
+        OnboardingPreferencesDataStore.resetOnboarding(context)
+    }
 }

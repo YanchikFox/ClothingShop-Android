@@ -1,4 +1,3 @@
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -21,10 +20,10 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "API_BASE_URL", "\"http://192.168.119.1:3000/api/\"")
-            buildConfigField("String", "IMAGES_BASE_URL", "\"http://192.168.119.1:3000/\"")
-            resValue("string", "api_base_url", "http://192.168.119.1:3000/api/")
-            resValue("string", "images_base_url", "http://192.168.119.1:3000/")
+            buildConfigField("String", "API_BASE_URL", "\"https://f78c934fc422.ngrok-free.app/api/\"")
+            buildConfigField("String", "IMAGES_BASE_URL", "\"https://f78c934fc422.ngrok-free.app/\"")
+            resValue("string", "api_base_url", "https://f78c934fc422.ngrok-free.app/api/")
+            resValue("string", "images_base_url", "https://f78c934fc422.ngrok-free.app/")
         }
         release {
             isMinifyEnabled = false
@@ -32,10 +31,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "API_BASE_URL", "\"http://192.168.119.1:3000/api/\"")
-            buildConfigField("String", "IMAGES_BASE_URL", "\"http://192.168.119.1:3000/\"")
-            resValue("string", "api_base_url", "http://192.168.119.1:3000/api/")
-            resValue("string", "images_base_url", "http://192.168.119.1:3000/")
+            buildConfigField("String", "API_BASE_URL", "\"https://f78c934fc422.ngrok-free.app/api/\"")
+            buildConfigField("String", "IMAGES_BASE_URL", "\"https://f78c934fc422.ngrok-free.app/\"")
+            resValue("string", "api_base_url", "https://f78c934fc422.ngrok-free.app/api/")
+            resValue("string", "images_base_url", "https://f78c934fc422.ngrok-free.app/")
         }
     }
     compileOptions {

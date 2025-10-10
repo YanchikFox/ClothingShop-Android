@@ -52,6 +52,12 @@ object OnboardingPreferencesDataStore {
         }
     }
 
+    suspend fun resetOnboarding(context: Context) {
+        context.onboardingDataStore.edit { prefs ->
+            prefs.clear()
+        }
+    }
+
     private fun Preferences.toOnboardingPreferences(): OnboardingPreferences? {
         val isCompleted = this[KEY_COMPLETED] ?: false
         if (!isCompleted) {

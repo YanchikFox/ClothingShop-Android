@@ -133,7 +133,8 @@ class SearchViewModel(private val productRepository: ProductRepository) : ViewMo
         try {
             val results = productRepository.searchProducts(
                 query = normalizedQuery,
-                gender = filters.categoryId
+                gender = filters.categoryId,
+                categoryId = null
             )
             _uiState.value = ProductsUiState.Success(results)
             normalizedQuery?.let { addToHistory(it) }

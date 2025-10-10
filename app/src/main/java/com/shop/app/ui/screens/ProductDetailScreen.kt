@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -54,6 +55,9 @@ import com.shop.app.data.model.ProductReview
 import com.shop.app.ui.theme.TShopAppTheme
 import androidx.compose.ui.res.stringResource
 import com.shop.app.R
+import com.shop.app.ui.components.ProductRow
+import com.shop.app.ui.components.SectionTitle
+import com.shop.app.ui.viewmodels.ProductsUiState
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -64,7 +68,9 @@ fun ProductDetailScreen(
     modifier: Modifier = Modifier,
     imagesBaseUrl: String,
     formatPrice: (Double) -> String,
-    onAddToCartClick: (product: Product, quantity: Int) -> Unit
+    onAddToCartClick: (product: Product, quantity: Int) -> Unit,
+    similarUiState: ProductsUiState = ProductsUiState.Success(emptyList()),
+    onProductClick: (String) -> Unit = {},
 ) {
     val product = products.firstOrNull { it.id == productId }
     var quantity by remember { mutableStateOf(1) }
@@ -152,6 +158,41 @@ fun ProductDetailScreen(
                     product.reviews.forEach { review ->
                         ReviewCard(review = review)
                     }
+                }
+            }
+        }
+
+        when (val similarState = similarUiState) {
+            is ProductsUiState.Loading -> {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    SectionTitle(titleRes = R.string.product_detail_similar)
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                }
+            }
+
+            is ProductsUiState.Success -> {
+                if (similarState.products.isNotEmpty()) {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        SectionTitle(titleRes = R.string.product_detail_similar)
+                        ProductRow(
+                            products = similarState.products,
+                            onProductClick = onProductClick,
+                            formatPrice = formatPrice,
+                            imagesBaseUrl = imagesBaseUrl
+                        )
+                    }
+                }
+            }
+
+            is ProductsUiState.Error -> {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    SectionTitle(titleRes = R.string.product_detail_similar)
+                    Text(
+                        text = stringResource(R.string.error_loading_products),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
             }
         }
@@ -377,7 +418,9 @@ fun ProductDetailScreenPreview() {
             products = listOf(sampleProduct),
             formatPrice = { price -> "${price.toInt()} ₴" },
             imagesBaseUrl = "",
-            onAddToCartClick = { _, _ -> }
+            onAddToCartClick = { _, _ -> },
+            similarUiState = ProductsUiState.Success(listOf(sampleProduct)),
+            onProductClick = {}
         )
     }
 }

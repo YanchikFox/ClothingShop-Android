@@ -71,6 +71,9 @@
     <string name="currency_uah">Гривня (UAH)</string>
     <string name="currency_usd">Долар США (USD)</string>
     <string name="currency_eur">Євро (EUR)</string>
+    <string name="settings_preferences_title">Вподобання</string>
+    <string name="settings_preferences_description">Керуйте своїми вподобаннями покупок та персоналізацією.</string>
+    <string name="settings_reset_onboarding">Змінити вподобання</string>
 
     <!-- Search -->
     <string name="search_products_hint">Пошук товарів</string>
@@ -123,6 +126,8 @@
     <!-- Home -->
     <string name="home_new_arrivals">Нові надходження</string>
     <string name="home_recommended">Може сподобатися</string>
+    <string name="home_for_you">Для вас</string>
+    <string name="home_popular">Популярне зараз</string>
     <string name="error_loading_products">Не вдалося завантажити товари</string>
 
     <!-- Promo -->
@@ -135,6 +140,7 @@
     <string name="product_detail_care">Догляд</string>
     <string name="product_detail_features">Особливості</string>
     <string name="product_detail_reviews">Відгуки</string>
+    <string name="product_detail_similar">Схожі товари</string>
     <string name="product_add_to_cart">Додати до кошика</string>
     <string name="product_image_unavailable">Немає зображення</string>
     <string name="product_review_rating">%1$d/5</string>

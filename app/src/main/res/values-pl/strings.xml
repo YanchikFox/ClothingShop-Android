@@ -71,6 +71,9 @@
     <string name="currency_uah">Hrywna ukraińska (UAH)</string>
     <string name="currency_usd">Dolar amerykański (USD)</string>
     <string name="currency_eur">Euro (EUR)</string>
+    <string name="settings_preferences_title">Preferencje</string>
+    <string name="settings_preferences_description">Zarządzaj swoimi preferencjami zakupów i personalizacją.</string>
+    <string name="settings_reset_onboarding">Zmień preferencje</string>
 
     <!-- Search -->
     <string name="search_products_hint">Szukaj produktów</string>
@@ -123,6 +126,8 @@
     <!-- Home -->
     <string name="home_new_arrivals">Nowości</string>
     <string name="home_recommended">Może Ci się spodobać</string>
+    <string name="home_for_you">Dla Ciebie</string>
+    <string name="home_popular">Popularne teraz</string>
     <string name="error_loading_products">Nie udało się wczytać produktów</string>
 
     <!-- Promo -->
@@ -135,6 +140,7 @@ DO -60%</string>
     <string name="product_detail_care">Pielęgnacja</string>
     <string name="product_detail_features">Cechy</string>
     <string name="product_detail_reviews">Opinie</string>
+    <string name="product_detail_similar">Podobne produkty</string>
     <string name="product_add_to_cart">Dodaj do koszyka</string>
     <string name="product_image_unavailable">Brak dostępnego zdjęcia</string>
     <string name="product_review_rating">%1$d/5</string>

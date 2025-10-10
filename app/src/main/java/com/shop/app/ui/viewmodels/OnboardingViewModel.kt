@@ -121,6 +121,12 @@ class OnboardingViewModel(
         }
     }
 
+    fun resetOnboarding() {
+        viewModelScope.launch {
+            onboardingPreferencesRepository.resetOnboarding()
+        }
+    }
+
     private fun Set<String>.toggle(id: String): Set<String> {
         return if (contains(id)) {
             toMutableSet().apply { remove(id) }
